@@ -1,9 +1,10 @@
 import "next-auth";
-import { SessionUserType } from "src/types/user";
+import { sessionUserType } from "src/types/session";
 
 declare module "next-auth" {
     export interface Session extends DefaultSession {
-        user: SessionUserType,
+        user: sessionUserType,
         expires: string
     }
+    export interface User extends sessionUserType {}
 }

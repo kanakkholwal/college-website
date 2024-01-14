@@ -114,12 +114,12 @@ function getInfo(rollNo: string) {
     ]
     return {
         batch: parseInt("20" + matches[0]),
-        branch: determineBranch(rollNo),
+        branch: determineDepartment(rollNo),
         url: "http://results.nith.ac.in/scheme" + matches[0] + "/studentresult/index.asp",
         programme: determineProgramme(rollNo)
     };
 }
-function determineBranch(RollNo: string) {
+export function determineDepartment(RollNo: string) {
     const lowerRollNo = RollNo.toLowerCase();
     switch (true) {
         case (lowerRollNo.includes("bar")):
@@ -147,7 +147,7 @@ function determineBranch(RollNo: string) {
     }
 
 }
-function determineProgramme(RollNo: string) {
+export function determineProgramme(RollNo: string) {
     const lowerRollNo = RollNo.toLowerCase();
 
     switch (true) {
