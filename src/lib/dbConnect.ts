@@ -1,10 +1,8 @@
-import dotenv from 'dotenv';
+
 import mongoose, { ConnectOptions, Mongoose } from "mongoose";
 
-//For env File 
-dotenv.config({
-    path: '.env',
-});
+
+
 const MONGODB_URI = process.env.MONGODB_URI as string;
 
 declare const global: {

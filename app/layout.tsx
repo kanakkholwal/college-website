@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { Provider, ThemeProvider } from "./client-provider";
-import "./codebox.css";
-import './global.css';
+
+import './globals.css';
 
 // import { Urbanist } from 'next/font/google';
 import { Plus_Jakarta_Sans } from "next/font/google";
@@ -25,8 +25,8 @@ const font = Plus_Jakarta_Sans({
 // })
 
 export const metadata: Metadata = {
-    title: 'Nexonauts - One stop solution for all your developer needs.',
-    description: 'Nexonauts is an one stop solution for all your developer needs.',
+    title: 'NITH Portal',
+    description: 'NITH Portal is a platform for students of NITH to get all the resources at one place.',
     applicationName: 'Nexonauts',
     keywords: ['Next.js', 'React', 'JavaScript', 'Nexonauts', 'AI Saas', 'AI', 'Saas', 'developer', 'developer tools', 'developer resources', 'developer'],
     authors: [{ name: 'Kanak Kholwal', url: 'https://kanakkholwal.eu.org' }],
