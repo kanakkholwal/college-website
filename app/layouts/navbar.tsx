@@ -1,58 +1,33 @@
 "use client";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger
+  navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import React from "react";
 
-type NavLinksType = {
-  title: string
-  href: string
-  description: string
-}
-const ai_applications: NavLinksType[] = [
+const nav_items = [
   {
-    title: "Find AI-Powered Apps",
-    href: "/ai-applications",
-    description: `Find the perfect tools for your business.`,
-  },
-  {
-    title: "Create Your Own App",
-    href: "/ai-applications/submit",
-    description: `Create your own AI-powered app.`,
-  }
-]
-const marketplace_components: NavLinksType[] = [
-  {
-    title: "Browse & Sell Creations",
-    href: "/marketplace",
-    description: `Browse and sell your digital products.`,
-  },
-  {
-    title: "Discover Digital Assets",
-    href: "/marketplace/discover",
-    description: `Discover digital assets for your business.`,
+    title: "Syllabus",
+    href: "/syllabus",
 
-  }
-
-]
-const search_components: NavLinksType[] = [
-  {
-    title: "Find Perfect Tools",
-    href: "/toolzen",
-    description: `Find the perfect tools for your business.`,
   },
   {
-    title: "Submit Your Tool",
-    href: "/toolzen/submit",
-    description: `Submit your tool to our toolbox.`,
+    title: "Results",
+    href: "/results",
+  },
+  {
+    title: "Attendance",
+    href: "/dashboard/attendance",
+  },
+  {
+    title: "Classroom",
+    href: "/classroom-availability",
   }
 ]
 
@@ -66,9 +41,9 @@ export default function Navbar() {
     <div className="mx-auto px-4 sm:px-12 xl:max-w-6xl xl:px-0">
       <div className="relative flex flex-wrap items-center justify-between gap-6 lg:gap-0 lg:py-4">
         <div className="relative z-20 flex w-full justify-between md:px-0 lg:w-max">
-          <a href="/" aria-label="logo" className="flex items-center space-x-2">
-            <img className="h-10 dark:invert" src="/assets/logo.svg" alt="logo" />
-          </a>
+          <Link href="/" aria-label="logo" className="flex items-center space-x-2 uppercase font-bold tracking-wider text-xl text-slate-800 dark:text-slate-200">
+            NITH PORTAL
+          </Link>
           <button aria-label="humburger" id="hamburger" className="relative -mr-6 p-6 lg:hidden"
             onClick={() => setOpen(!open)}
           >
@@ -82,97 +57,23 @@ export default function Navbar() {
           <div className="text-gray-600 dark:text-gray-300 lg:pr-4">
             <NavigationMenu>
               <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                      <li className="row-span-3">
-                        <NavigationMenuLink asChild>
-                          <a
-                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                            href="/"
-                          >
-                            <img className="h-12 dark:invert" src="/assets/logo.svg" alt="logo" />
-                            <div className="mb-2 mt-4 text-lg font-medium">
-                              Nexonauts.com
-                            </div>
-                            <p className="text-sm leading-tight text-muted-foreground">
-                              Your Development Hub
-                            </p>
-                          </a>
-                        </NavigationMenuLink>
-                      </li>
-                      <ListItem href="/about" title="About Us">
-                        Learn more about us.
-                      </ListItem>
-                      <ListItem href="/pricing" title="Pricing">
-                        See our pricing plans.
-                      </ListItem>
-                      <ListItem href="/contact" title="Contact Us">
-                        Contact Us
-                      </ListItem>
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Tool Zen</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                      {search_components.map((component) => (
-                        <ListItem
-                          key={component.title}
-                          title={component.title}
-                          href={component.href}
-                        >
-                          {component.description}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>
-                    CreationsHub
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                      {marketplace_components.map((component) => (
-                        <ListItem
-                          key={component.title}
-                          title={component.title}
-                          href={component.href}
-                        >
-                          {component.description}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>
-                    AppForge
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                      {ai_applications.map((component) => (
-                        <ListItem
-                          key={component.title}
-                          title={component.title}
-                          href={component.href}
-                        >
-                          {component.description}
-                        </ListItem>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
+                {nav_items.map((item, i) => {
+                  return (<NavigationMenuItem key={i}>
+                    <Link href={item.href} legacyBehavior passHref>
+                      <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                        {item.title}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>)
+                })}
+
               </NavigationMenuList>
             </NavigationMenu>
           </div>
           <div className="mt-6 -ml-1 flex w-full flex-col space-y-2 border-primary/10 dark:border-gray-700 sm:flex-row md:w-max lg:mt-0 lg:mr-6 lg:space-y-0 lg:border-l lg:pl-6">
             <Link
               className="relative ml-auto flex  h-12 lg:h-9 w-full items-center justify-center before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-primaryLight sm:px-4 lg:before:border lg:before:border-gray-200 lg:before:bg-primary/10 lg:dark:before:bg-gray-800"
-              href="/signup?ref=navbar-button">
+              href="/login?ref=navbar-button">
               <span className="relative text-sm font-semibold text-white dark:text-gray-900 lg:text-primary lg:dark:text-white">Get Started</span>
             </Link>
           </div>

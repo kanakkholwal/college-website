@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FiLinkedin } from "react-icons/fi";
-//import { LuGithub } from "react-icons/lu";
+import { LuGithub } from "react-icons/lu";
 import { RiTwitterXFill } from "react-icons/ri";
 
 
@@ -26,62 +26,33 @@ export default function Footer() {
                         {process.env.NEXT_PUBLIC_WEBSITE_NAME}
                     </Link>
                     <p className="mb-12 xl:w-4/5 font-medium text-slate-600">
-                        {process.env.NEXT_PUBLIC_WEBSITE_NAME} is an open source project that aims to provide a complete solution for AI Powered Apps.
+                        Created by <Link href="https://kanakkholwal.eu.org" className="text-slate-900 dark:text-slate-200 font-semibold">Kanak</Link>
+
                     </p>
                     <div className="flex items-center gap-5">
-                        <Link href="https://x.com/NexoNauts" className={"text-slate-500 hover:text-primary hover:-translate-y-1 ease-in duration-300 flex justify-center items-center h-8 icon"}>
+                        <Link href="https://x.com/kanakkholwal" className={"text-slate-500 hover:text-primary hover:-translate-y-1 ease-in duration-300 flex justify-center items-center h-8 icon"}>
                             <RiTwitterXFill className="w-5 h-5" />
                         </Link>
-                        <Link href="https://linkedin.com/NexoNauts" className={"text-slate-500 hover:text-primary hover:-translate-y-1 ease-in duration-300 flex justify-center items-center h-8 icon"}>
+                        <Link href="https://linkedin.com/in/kanak-kholwal" className={"text-slate-500 hover:text-primary hover:-translate-y-1 ease-in duration-300 flex justify-center items-center h-8 icon"}>
                             <FiLinkedin className="w-5 h-5" />
                         </Link>
-                        {/*                         <Link href="https://github.com/NexoNauts" className={"text-slate-500 hover:text-primary ease-in duration-300 flex justify-center items-center h-16 icon"}>
+                        <Link href="https://github.com/kanakkholwal" className={"text-slate-500 hover:text-primary ease-in duration-300 flex justify-center items-center h-16 icon"}>
                             <LuGithub className="w-5 h-5" />
-                        </Link> */}
+                        </Link>
                     </div>
                     <p className="font-medium mt-6 text-slate-600">
-                        © {new Date().getFullYear()} <Link href="/" className="text-slate-900 dark:text-slate-200 font-semibold">{process.env.NEXT_PUBLIC_WEBSITE_NAME}</Link> . All rights reserved.
+                        © {new Date().getFullYear()} <Link href="/" className="text-slate-900 dark:text-slate-200 font-semibold">{process.env.NEXT_PUBLIC_WEBSITE_NAME}</Link> .
                     </p>
                 </div>
                 <div className="max-w-[571px] w-full">
                     <div className="flex flex-col sm:flex-row sm:justify-between gap-10">
+
                         <div>
                             <h5 className="font-semibold mb-5">
                                 Product
                             </h5>
                             <ul className="flex flex-col gap-3">
-                                <li>
-                                    <Link href="/apps" className="text-slate-500 hover:text-primary ease-in duration-300">
-                                        AI Apps
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/dev-tools" className="text-slate-500 hover:text-primary ease-in duration-300">
-                                        Dev Tools
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/tool-finder" className="text-slate-500 hover:text-primary ease-in duration-300">
-                                        Tool Finder
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/marketplace" className="text-slate-500 hover:text-primary ease-in duration-300">
-                                        MarketPlace <span className="text-slate-400 italic">(Comming Soon)</span>
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h5 className="font-semibold mb-5">
-                                Company
-                            </h5>
-                            <ul className="flex flex-col gap-3">
-                                <li>
-                                    <Link href="/about" className="text-slate-500 hover:text-primary ease-in duration-300">
-                                        About
-                                    </Link>
-                                </li>
+
                                 <li>
                                     <Link href="/pricing" className="text-slate-500 hover:text-primary ease-in duration-300">
                                         Pricing

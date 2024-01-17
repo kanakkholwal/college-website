@@ -1,17 +1,20 @@
-const config = {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx,js,jsx}',
     './components/**/*.{ts,tsx,js,jsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx,js,jsx}',
     './@/**/*.{ts,tsx,js,jsx}',
-  ],
+	],
   theme: {
     container: {
       center: true,
       padding: "2rem",
       screens: {
         "2xl": "1400px",
+        "8xl": "1920px",
       },
     },
     extend: {
@@ -50,16 +53,18 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      // boxShadow:{
+      //   "primary": "0px 18px 48px -12px hsl(var(--primary) / 0.35)",
+      //   "slate": "0px 18px 48px -12px hsl(var(--slate) / 0.35)",
+      //   "destructive": "0px 18px 48px -12px hsl(var(--destructive) / 0.35)",
+      //   "accent": "0px 18px 48px -12px hsl(var(--accent) / 0.35)",
+      //   "card": "0px 18px 48px -12px hsl(var(--card) / 0.35)",
+      // },
       keyframes: {
         "accordion-down": {
           from: { height: 0 },
@@ -78,4 +83,3 @@ const config = {
   },
   plugins: [require("tailwindcss-animate")],
 }
-export default config

@@ -12,6 +12,6 @@ const classroomSchema = new Schema<IClassroom>({
     capacity: Number,
 });
 
-const Classroom = mongoose.model<IClassroom>('Classroom', classroomSchema);
+const Classroom = mongoose.models.Classroom || mongoose.model<IClassroom>('Classroom', classroomSchema);
 
 export default Classroom;

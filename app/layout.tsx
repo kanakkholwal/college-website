@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { Provider, ThemeProvider } from "./client-provider";
 
 import './globals.css';
@@ -27,8 +26,7 @@ const font = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
     title: 'NITH Portal',
     description: 'NITH Portal is a platform for students of NITH to get all the resources at one place.',
-    applicationName: 'Nexonauts',
-    keywords: ['Next.js', 'React', 'JavaScript', 'Nexonauts', 'AI Saas', 'AI', 'Saas', 'developer', 'developer tools', 'developer resources', 'developer'],
+    applicationName: 'NITH Portal',
     authors: [{ name: 'Kanak Kholwal', url: 'https://kanakkholwal.eu.org' }],
     creator: 'Kanak Kholwal',
     formatDetection: {
@@ -36,7 +34,7 @@ export const metadata: Metadata = {
         address: false,
         telephone: false,
     },
-    metadataBase: new URL('https://nexonauts.com/'),
+    metadataBase: new URL('https://nith.eu.org'),
     robots: {
         index: false,
         follow: true,
@@ -62,15 +60,11 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head>
-                <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-BCVK6GWZ0E" />
-                <meta name="google-adsense-account" content="ca-pub-2329686175069611" />
-                {/* <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
-                    <link href='https://fonts.googleapis.com/css?family=Fira+Code:wght@300,400,500,600&display=swap' rel='stylesheet' /> */}
             </head>
             <body className={font.className + " min-h-screen selection:bg-primary/10 selection:text-primary dark:bg-gray-900"}>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="light"
+                    defaultTheme="system"
                     enableSystem
                     themes={['light', 'dark']}
                 >

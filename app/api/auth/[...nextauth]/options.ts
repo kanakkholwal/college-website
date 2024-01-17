@@ -39,20 +39,6 @@ export const authOptions: NextAuthOptions = {
         strategy: "jwt",
     },
     secret: env.NEXT_AUTH_SECRET,
-    cookies: {
-        sessionToken: {
-            name: `${cookiePrefix}next-auth.session-token`,
-            options: {
-                httpOnly: true,
-                sameSite: 'lax',
-                path: '/',
-                secure: useSecureCookies,
-                domain: hostName == 'localhost' ? hostName : '.' + "nexonauts.com" // add a . in front so that subdomains are included
-
-            }
-        },
-    },
-
     // Here we add our login providers - this is where you could add Google or Github SSO as well
     providers: [
         CredentialsProvider({
@@ -91,6 +77,7 @@ export const authOptions: NextAuthOptions = {
                                 success: false
                             })
                         const user = {
+                            id: userInDb._id.toString(),
                             _id: userInDb._id.toString(),
                             firstName: userInDb.firstName,
                             lastName: userInDb.lastName,
@@ -153,13 +140,14 @@ export const authOptions: NextAuthOptions = {
                             roles: ["student"],
                             gender: null,
                             phone: null,
-                            department: determineDepartment(profile.email),
+                            department: determineDepartment(profile.email.split("@")[0]),
 
                         });
                         await user.save();
 
                         return Promise.resolve({
                             _id: user._id.toString(),
+                            id: user._id.toString(),
                             firstName: user.firstName,
                             lastName: user.lastName,
                             rollNo: user.rollNo,
@@ -177,6 +165,7 @@ export const authOptions: NextAuthOptions = {
 
                     return Promise.resolve({
                         _id: userInDb._id.toString(),
+                        id: userInDb._id.toString(),
                         firstName: userInDb.firstName,
                         lastName: userInDb.lastName,
                         rollNo: userInDb.rollNo,

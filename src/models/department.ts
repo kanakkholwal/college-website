@@ -12,6 +12,6 @@ const departmentSchema = new Schema<IDepartment>({
     location: String,
 });
 
-const Department = mongoose.model<IDepartment>('Department', departmentSchema);
+const Department = mongoose.models.Department ||mongoose.model<IDepartment>('Department', departmentSchema);
 
 export default Department;

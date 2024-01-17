@@ -18,6 +18,6 @@ const scheduleSchema = new Schema<ISchedule>({
   endTime: String,
 });
 
-const Schedule = mongoose.model<ISchedule>('Schedule', scheduleSchema);
+const Schedule = mongoose.models.Schedule|| mongoose.model<ISchedule>('Schedule', scheduleSchema);
 
 export default Schedule;

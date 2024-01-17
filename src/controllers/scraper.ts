@@ -1,8 +1,135 @@
-import Nightmare from "nightmare";
-import HTMLParser from "node-html-parser";
+import axios from "axios";
+import * as cheerio from 'cheerio';
 import { ResultType } from "src/types/result";
-const inputSelector = "input[type=text]";
-const SubmitSelector = "input[type=submit]";
+// import { CheerioElement } from 'cheerio';
+
+
+const fetchData = async (url: string, RollNo: string, headers: Record<string, string>) => {
+
+
+    const data = `RollNumber=${RollNo}&CSRFToken=${headers.CSRFToken}&RequestVerificationToken=${headers.RequestVerificationToken}&B1=Submit`;
+
+    try {
+        const response = await axios.post(url, data, {
+            headers: {
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Cache-Control': 'max-age=0',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Upgrade-Insecure-Requests': '1',
+                'Referrer-Policy': 'strict-origin-when-cross-origin',
+                'Referer': headers.Referer,
+            }
+        });
+        //  only if the status is 200
+        if (response.status !== 200) {
+            console.log("Invalid Roll No")
+            return null;
+        }
+        return response.data.toString();
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+};
+const parseResult = (result: string | null, info: {
+    rollNo: string;
+    url: string;
+    branch: string;
+    batch: number;
+    programme: string;
+}): Promise<ResultType> => {
+    return new Promise((resolve, reject) => {
+        if (result === null) {
+            console.log("Invalid Roll No");
+            reject("Invalid Roll No");
+            return;
+        }
+        console.log("Result is available");
+
+        const $: cheerio.CheerioAPI = cheerio.load(result);
+        const student: ResultType = {
+            name: "",
+            rollNo: info.rollNo,
+            branch: info.branch,
+            batch: info.batch,
+            programme: info.programme,
+            semesters: [],
+        };
+
+        student.name =
+            $('table')
+                .eq(1)
+                .find('td:nth-child(2)>p:nth-child(2)')
+                ?.text()
+                .trim() || "";
+
+        $('.pagebreak')?.remove();
+
+        $('table:nth-child(odd):nth-child(n + 3):not(:last-of-type)').each(
+            (index: number, table: cheerio.Element) => {
+                if (!student.semesters[index]) {
+                    student.semesters.push({
+                        semester: 0,
+                        sgpi: 0,
+                        sgpi_total: 0,
+                        cgpi: 0,
+                        cgpi_total: 0,
+                        courses: [],
+                    });
+                }
+                $(table)
+                    .find('tr:not([class])')
+                    .each((trIndex: number, tr: cheerio.Element) => {
+                        const semester = parseFloat(
+                            $(tr).find('td:nth-child(6)').text() || "0.00"
+                        );
+                        const semester_total = parseFloat(
+                            $(tr).find('td:nth-child(4)').text() || "1"
+                        );
+                        student.semesters[index].courses.push({
+                            name: $(tr).find('td:nth-child(2)').text().trim() || "",
+                            code: $(tr).find('td:nth-child(3)').text().trim() || "",
+                            cgpi: semester / semester_total,
+                        });
+                    });
+            }
+        );
+
+        $('table:nth-child(even):nth-child(n + 3):not(:last-of-type)').each(
+            (index: number, table: cheerio.Element) => {
+                $(table)
+                    .find('td')
+                    .each((i: number, td: cheerio.Element) => {
+                        student.semesters[index].semester = ("0" + (index + 1)).slice(-2) as unknown as number;
+                        student.semesters[index].sgpi = $(td)
+                            .eq(1)
+                            .text()
+                            .trim()
+                            .split("=")[1] as unknown as number;
+                        student.semesters[index].sgpi_total = $(td)
+                            .eq(2)
+                            .text()
+                            .trim()
+                            .split(" ")
+                            .pop() as unknown as number;
+                        student.semesters[index].cgpi = $(td)
+                            .eq(3)
+                            .text()
+                            .trim()
+                            .split("=")[1] as unknown as number;
+                        student.semesters[index].cgpi_total = $(td)
+                            .eq(4)
+                            .text()
+                            .trim()
+                            .split(" ")
+                            .pop() as unknown as number;
+                    });
+            }
+        );
+
+        resolve(student);
+    });
+};
 
 
 export async function ScrapeResult(rollNo: string): Promise<ResultType> {
@@ -10,100 +137,57 @@ export async function ScrapeResult(rollNo: string): Promise<ResultType> {
         url,
         branch,
         batch,
-        programme
+        programme,
+        headers
     } = getInfo(rollNo)
 
     console.log(rollNo, url, branch, batch, programme)
     return new Promise(async (resolve, reject) => {
         try {
             console.log("evaluating")
-            const nightmare = new Nightmare();
-
-            await nightmare.goto(url)
-                .type(inputSelector, rollNo)
-                .click(SubmitSelector)
-                .wait("#page-wrap")
-                .evaluate(() => {
-                    console.log("evaluating")
-                    console.log(document.querySelector("#page-wrap"))
-                    //  if status code is not 200 then return null
-                    if (!document.querySelector("#page-wrap")) {
-                        console.log("Invalid Roll No");
-                        return null;
-                    }
-
-                    return document.querySelector("#page-wrap")?.innerHTML;
-                })
-                .end()
-                .then((result: string | null) => {
-                    if (result === null) {
-                        console.log("Invalid Roll No");
-                        reject("Invalid Roll No");
-
-                        return;
-                    }
-                    console.log("result is available");
-                    const document = HTMLParser.parse(result);
-                    let student: ResultType = {
-                        name: "",
-                        rollNo: rollNo,
-                        branch,
-                        batch,
-                        programme,
-                        semesters: []
-                    }
-                    student.name = document.querySelectorAll('table')[1].querySelector('td:nth-child(2)>p:nth-child(2)')?.innerText.trim() || ""
-                    document.querySelector(".pagebreak")?.remove();
-                    const subject_tables = document.querySelectorAll("table:nth-child(odd):nth-child(n + 3):not(:last-of-type)");
-                    subject_tables.forEach((table, index) => {
-                        if (!student.semesters[index]) {
-
-                            student.semesters.push(
-                                {
-                                    semester: 0,
-                                    sgpi: 0,
-                                    sgpi_total: 0,
-                                    cgpi: 0,
-                                    cgpi_total: 0,
-                                    courses: []
-                                }
-                            )
-                        }
-                        table.querySelectorAll("tr:not([class])").forEach((tr) => {
-                            let semester = parseFloat(tr.querySelector("td:nth-child(6)")?.textContent || "0.00");
-                            let semester_total = parseFloat(tr.querySelector("td:nth-child(4)")?.textContent || "1");
-                            student.semesters[index].courses.push({
-                                name: tr.querySelector("td:nth-child(2)")?.innerText.trim() || "",
-                                code: tr.querySelector("td:nth-child(3)")?.innerText.trim() || "",
-                                cgpi: semester / semester_total
-                            });
-                        });
-                    });
-                    const result_tables = document.querySelectorAll("table:nth-child(even):nth-child(n + 3):not(:last-of-type)");
-                    result_tables.forEach((table, index) => {
-                        table.querySelectorAll("td").forEach((td, i, array) => {
-                            student.semesters[index].semester = ("0" + (index + 1)).slice(-2) as unknown as number;
-                            student.semesters[index].sgpi = array[1].innerText.trim().split("=")[1] as unknown as number;
-                            student.semesters[index].sgpi_total = array[2].innerText.trim().split(" ").pop() as unknown as number;
-                            student.semesters[index].cgpi = array[3].innerText.trim().split("=")[1] as unknown as number;
-                            student.semesters[index].cgpi_total = array[4].innerText.trim().split(" ").pop() as unknown as number;
-                        });
-                    });
-
-                    resolve(student);
-                }).catch((err:any) => {
-                    console.log(err);
-                    reject(err);
-                })
-                .finally(() => {
-                    nightmare.end();
-                })
+            const result = await fetchData(url, rollNo, headers);
+            console.log("evaluated")
+            const student = await parseResult(result, {
+                rollNo,
+                ...getInfo(rollNo)
+            });
         } catch (err) {
             reject(err);
         }
 
     })
 
+}
+const headerMap: Record<number, {
+    url: string,
+    Referer: string,
+    CSRFToken: string,
+    RequestVerificationToken: string
+}> = {
+    20: {
+        url: "http://results.nith.ac.in/scheme20/studentresult/result.asp",
+        Referer: "http://results.nith.ac.in/scheme20/studentresult/index.asp",
+        CSRFToken: "{782F96DF-5115-4492-8CB2-06104ECFF0CA}",
+        RequestVerificationToken: "094D0BF7-EE18-E102-8CBF-23C329B32E1C"
+    },
+    21: {
+        url: "http://results.nith.ac.in/scheme21/studentresult/result.asp",
+        Referer: "http://results.nith.ac.in/scheme21/studentresult/index.asp",
+        CSRFToken: "{D5D50B24-2DDE-4C35-9F41-10426C59EEA7}",
+        RequestVerificationToken: "7BA3D112-507E-5379-EE25-9539F0DE9076"
+    },
+    22: {
+        url: "http://results.nith.ac.in/scheme22/studentresult/result.asp",
+        Referer: "http://results.nith.ac.in/scheme22/studentresult/index.asp",
+        CSRFToken: "{AF6DB03B-F6EC-475E-B331-6C9DE3846923}",
+        RequestVerificationToken: "DA92D62F-BF6E-B268-4E04-F419F5EA6233"
+    },
+    23: {
+        url: "http://results.nith.ac.in/scheme22/studentresult/result.asp",
+        Referer: "http://results.nith.ac.in/scheme22/studentresult/index.asp",
+        CSRFToken: "{F1E16363-FEDA-48AF-88E9-8A186425C213}",
+        RequestVerificationToken: "4FFEE8F3-14C9-27C4-B370-598406BF99C1"
+    }
 }
 function getInfo(rollNo: string) {
     // split the roll no into 3 parts starting two characters then 3 characters and then 3 characters
@@ -115,7 +199,12 @@ function getInfo(rollNo: string) {
     return {
         batch: parseInt("20" + matches[0]),
         branch: determineDepartment(rollNo),
-        url: "http://results.nith.ac.in/scheme" + matches[0] + "/studentresult/index.asp",
+        url: headerMap[parseInt(matches[0])].url,
+        headers: {
+            Referer: headerMap[parseInt(matches[0])].Referer,
+            CSRFToken: headerMap[parseInt(matches[0])].CSRFToken,
+            RequestVerificationToken: headerMap[parseInt(matches[0])].RequestVerificationToken
+        },
         programme: determineProgramme(rollNo)
     };
 }

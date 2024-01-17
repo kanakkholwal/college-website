@@ -22,6 +22,12 @@ export interface ResultType extends Document {
     batch: number;
     programme: string;
     semesters: Semester[];
+    rank: {
+        college: number;
+        batch: number;
+        branch: number;
+        class: number;
+    };
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -48,10 +54,16 @@ const ResultSchema: Schema = new Schema({
     batch: { type: Number, required: true },
     programme: { type: String, required: true },
     semesters: { type: [SemesterSchema], required: true },
+    rank: {
+        college: { type: Number,default:0 },
+        batch: { type: Number,default:0 },
+        branch: { type: Number ,default:0},
+        class: { type: Number ,default:0},
+    },
 },{
     timestamps: true
 });
 
-const ResultModel = mongoose.model<ResultType>('Result', ResultSchema);
+const ResultModel = mongoose.models.Result ||mongoose.model<ResultType>('Result', ResultSchema);
 
 export default ResultModel;
