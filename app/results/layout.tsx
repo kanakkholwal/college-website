@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <header>
             <Navbar />
         </header>
-        <main className="space-y-40 mb-40">
+        <main className="space-y-10 mb-40">
             {children}
         </main>
         <Footer />

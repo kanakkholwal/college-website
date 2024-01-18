@@ -1,7 +1,6 @@
 
-import { Suspense } from "react";
 import { getResults } from "./action";
-import { ResultCard, SkeletonCard } from "./components/card";
+import { SkeletonCard } from "./components/card";
 import Pagination from "./components/pagination";
 import SearchBox from "./components/search";
 
@@ -41,20 +40,12 @@ export default async function ResultPage({
             </div>
         </div>
         <div className="max-w-[100rem] mx-auto px-6 md:px-12 xl:px-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <Suspense fallback={<>
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
-            </>}>
-                {results.map((result, i) => {
-                    return <ResultCard key={i} result={result} style={{
-                        animationDelay: `${i * 100}ms`
-                    }} />
-                })}
-            </Suspense>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
         </div>
         <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6">
             <Pagination totalPages={totalPages} />

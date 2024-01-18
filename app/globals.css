@@ -157,6 +157,25 @@ a {
     height: 1px;
     @apply bg-border dark:bg-slate-700;
 }
+.popup{
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    animation: pop 0.3s ease-in-out forwards;
+}
+@keyframes pop {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(20px);
+        transform: translateY(20px);
+    }
+    
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
 
 /* lg: */
 @media (max-width: 1024px) {

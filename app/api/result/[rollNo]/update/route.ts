@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ScrapeResult } from 'src/controllers/scraper';
-// import dbConnect from "src/lib/dbConnect";
-// import Result from "src/models/result";
+import dbConnect from "src/lib/dbConnect";
+import Result from "src/models/result";
 
 export async function POST(request: NextRequest & { params: { rollNo: string } }) {
     try {
@@ -9,30 +9,30 @@ export async function POST(request: NextRequest & { params: { rollNo: string } }
         const rollNo = request.params.rollNo;
         console.log(rollNo)
         const result = await ScrapeResult(rollNo);
-        // await dbConnect();
-        // const resultData = await Result.findOne({ rollNo: rollNo });
-        // if (resultData) {
-        //     if (result.semesters.length > resultData.semesters.length) {
-        //         resultData.semesters = result.semesters;
-        //         await resultData.save();
-        //         console.log("Updated ", rollNo)
-        //     } else {
-        //         console.log("Up to date ", rollNo)
-        //     }
+        await dbConnect();
+        const resultData = await Result.findOne({ rollNo: rollNo });
+        if (resultData) {
+            if (result.semesters.length > resultData.semesters.length) {
+                resultData.semesters = result.semesters;
+                await resultData.save();
+                console.log("Updated ", rollNo)
+            } else {
+                console.log("Up to date ", rollNo)
+            }
 
 
-        // } else {
-        //     await Result.create({
-        //         name: result.name,
-        //         rollNo: rollNo,
-        //         branch: result.branch,
-        //         batch: result.batch,
-        //         programme: result.programme,
-        //         semesters: result.semesters
-        //     })
-        //     console.log(" added ", rollNo)
+        } else {
+            await Result.create({
+                name: result.name,
+                rollNo: rollNo,
+                branch: result.branch,
+                batch: result.batch,
+                programme: result.programme,
+                semesters: result.semesters
+            })
+            console.log(" added ", rollNo)
 
-        // }
+        }
 
     
         return NextResponse.json({

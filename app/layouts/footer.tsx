@@ -1,3 +1,4 @@
+import { Instagram } from 'lucide-react';
 import Link from "next/link";
 import { FiLinkedin } from "react-icons/fi";
 import { LuGithub } from "react-icons/lu";
@@ -36,8 +37,11 @@ export default function Footer() {
                         <Link href="https://linkedin.com/in/kanak-kholwal" className={"text-slate-500 hover:text-primary hover:-translate-y-1 ease-in duration-300 flex justify-center items-center h-8 icon"}>
                             <FiLinkedin className="w-5 h-5" />
                         </Link>
-                        <Link href="https://github.com/kanakkholwal" className={"text-slate-500 hover:text-primary ease-in duration-300 flex justify-center items-center h-16 icon"}>
+                        <Link href="https://github.com/kanakkholwal" className={"text-slate-500 hover:text-primary hover:-translate-y-1  ease-in duration-300 flex justify-center items-center h-16 icon"}>
                             <LuGithub className="w-5 h-5" />
+                        </Link>
+                        <Link href="https://instagram.com/kanakkholwal" className={"text-slate-500 hover:text-primary hover:-translate-y-1  ease-in duration-300 flex justify-center items-center h-16 icon"}>
+                            <Instagram className="w-5 h-5" />
                         </Link>
                     </div>
                     <p className="font-medium mt-6 text-slate-600">
@@ -52,12 +56,6 @@ export default function Footer() {
                                 Product
                             </h5>
                             <ul className="flex flex-col gap-3">
-
-                                <li>
-                                    <Link href="/pricing" className="text-slate-500 hover:text-primary ease-in duration-300">
-                                        Pricing
-                                    </Link>
-                                </li>
                                 <li>
                                     <Link href="/privacy" className="text-slate-500 hover:text-primary ease-in duration-300">
                                         Privacy
