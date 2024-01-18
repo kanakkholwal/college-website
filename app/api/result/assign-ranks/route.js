@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "src/lib/dbConnect";
 import ResultModel from "src/models/result";
 
-export async function POST(request: NextRequest) {
+export async function POST(request) {
     try {
 
         if (process.env.NODE_ENV === 'production') {
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
             status:200
         })
     }
-    catch (error:any) {
+    catch (error) {
         console.error('Error assigning ranks:', error);
 
         return NextResponse.json({
