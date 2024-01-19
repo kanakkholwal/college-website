@@ -14,9 +14,9 @@ export default async function ResultPage({
     searchParams?: {
         query?: string,
         page?: string,
-        batch?:string,
-        branch?:string,
-        programme?:string,
+        batch?: string,
+        branch?: string,
+        programme?: string,
 
     };
 }) {
@@ -24,11 +24,11 @@ export default async function ResultPage({
     const currentPage = Number(searchParams?.page) || 1;
     const filter = {
         // batch:Number(searchParams?.page) || "*",
-        branch:searchParams?.branch || '',
-        programme:searchParams?.programme || ''
+        branch: searchParams?.branch || '',
+        programme: searchParams?.programme || ''
     }
-    
-    const { results, totalPages,branches,programmes,batches } = await getResults(query, currentPage,filter);
+
+    const { results, totalPages, branches, programmes, batches } = await getResults(query, currentPage, filter);
 
 
     return (<>
@@ -47,10 +47,10 @@ export default async function ResultPage({
                         </p>
                         <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
                             <Suspense fallback={<>
-                                <Skeleton className="h-12 w-full "/> 
+                                <Skeleton className="h-12 w-full " />
                             </>}>
 
-                            <SearchBox branches={branches} programmes={programmes} batches={batches} />
+                                <SearchBox branches={branches} programmes={programmes} batches={batches} />
                             </Suspense>
                         </div>
                     </div>
