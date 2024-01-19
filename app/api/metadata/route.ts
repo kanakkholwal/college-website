@@ -1,6 +1,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { getMetData } from "./fetch";
+// import { getMetData } from "./fetch";
 
 export async function GET(request: NextRequest) {
     try {
@@ -14,14 +14,14 @@ export async function GET(request: NextRequest) {
                 status: 400
             })
         }
-        const metadata = await getMetData(requestUrl);
+        // const metadata = await getMetData(requestUrl);
 
 
 
         return NextResponse.json({
             result: "success",
             message: "Fetched MetaData",
-            data: metadata
+            data: requestUrl
         }, {
             status: 200
         })
