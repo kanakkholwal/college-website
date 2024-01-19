@@ -3,18 +3,7 @@ export interface Content {
     title:string,
     topics:string[],
     lectures:number,
-    outcomes?:string[],
-    books_and_references:{
-        name:string,
-        link:string,
-    }[],
-    prev_papers:{
-        year:number,
-        exam:"mid" | "end" | "others",
-        url:string,
-        name:string,
-        preview?:string,
-    }[],
+    
 }
 const contentSchema = new Schema<Content>({
     title:{
@@ -29,43 +18,32 @@ const contentSchema = new Schema<Content>({
         required:true
     },
     lectures:Number,
-    outcomes:{
-        type:[String],
-        trim:true,
-    },
-    books_and_references:{
-        type:[{
-            name:String,
-            link:String,
-        }],
-        required:true,
-    },
-    prev_papers:{
-        type:[{
-            year:Number,
-            exam:{
-                type:String,
-                enums:["mid" , "end" , "others"]
-            },
-            url:String,
-            name:String,
-            preview:String, 
-        }],
-        required:true,
-    }
 })
-interface ICourse extends Document {
+export interface CourseType extends Document {
     name: string;
     code: string;
     type: string;
     credits:number,
+    department:string,
     content:Content[],
+    outcomes?:string[],
+    books_and_references:{
+        name:string,
+        link:string,
+    }[],
+    prev_papers:{
+        year:number,
+        exam:"mid" | "end" | "others",
+        url:string,
+        name:string,
+        preview?:string,
+    }[],
     createdAt?: Date;
     updatedAt?: Date;
 }
 
 
-const departmentSchema = new Schema<ICourse>({
+const courseSchema = new Schema<CourseType>({
     name: {
         type:String,
         trim:true,
@@ -89,10 +67,36 @@ const departmentSchema = new Schema<ICourse>({
         required:true
     },
     content: { type: [contentSchema], required: true },
+    department: { type: String, required: true },
+    prev_papers:{
+        type:[{
+            year:Number,
+            exam:{
+                type:String,
+                enums:["mid" , "end" , "others"]
+            },
+            url:String,
+            name:String,
+            preview:String, 
+        }],
+        required:true,
+    },
+    outcomes:{
+        type:[String],
+        trim:true,
+    },
+    books_and_references:{
+        type:[{
+            name:String,
+            link:String,
+        }],
+        required:true,
+    },
+    
 },{
     timestamps:true
 });
 
-const Course = mongoose.models.Course ||mongoose.model<ICourse>('Course', departmentSchema);
+const Course = mongoose.models.Course ||mongoose.model<CourseType>('Course', courseSchema);
 
 export default Course;

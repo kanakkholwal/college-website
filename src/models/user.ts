@@ -12,7 +12,7 @@ export interface IUser {
     department: string;
     roles: string[];
 }
-interface IUserSchema extends IUser, Document {
+export interface IUserSchema extends IUser, Document {
     password: string;
     comparePassword: (password: string) => Promise<boolean>;
 }
@@ -31,7 +31,7 @@ const userSchema = new Schema<IUserSchema>({
     profilePicture: { type: String, default: null },
     phone: { type: Number, default: null },
     department: { type: String, required: true },
-    roles: { type: [String], default: ['student'], enum: ['student', 'cr', 'faculty', 'hod'] }
+    roles: { type: [String], default: ['student'], enum: ['student', 'cr', 'faculty', 'hod',"moderator","admin"] }
 });
 // Middleware to hash password before saving
 userSchema.pre('save', async function (next) {
@@ -48,6 +48,15 @@ userSchema.pre('save', async function (next) {
         return next(err);
     }
 });
+// Method to compare password
+userSchema.methods.comparePassword = async function (password:string):Promise<boolean> {
+    try {
+      return await bcrypt.compare(password, this.password);
+    } catch (err:any) {
+      throw new Error(err);
+    }
+  };
+  
 
 const User = mongoose.models.User ||  mongoose.model<IUserSchema>('User', userSchema);
 
