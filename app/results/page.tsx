@@ -74,7 +74,12 @@ export default async function ResultPage({
             </Suspense>
         </div>
         <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6">
+        <Suspense fallback={<>
+                                <Skeleton className="h-12 w-full " />
+                            </>}>
+
             <Pagination totalPages={totalPages} />
+                            </Suspense>
         </div>
     </>)
 }
