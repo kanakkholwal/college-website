@@ -1,5 +1,4 @@
 
-import { getResults } from "./action";
 import { SkeletonCard } from "./components/card";
 import Pagination from "./components/pagination";
 import SearchBox from "./components/search";
@@ -16,8 +15,8 @@ export default async function ResultPage({
 }) {
     const query = searchParams?.query || '';
     const currentPage = Number(searchParams?.page) || 1;
-    const { results, totalPages } = await getResults(query, currentPage);
 
+    const totalPages = 69;
     return (<>
         <div className="relative mb-28" id="home">
             <div aria-hidden="true" className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20">
@@ -33,7 +32,7 @@ export default async function ResultPage({
                             NITH Portal is a platform for students of NITH to get all the resources at one place.
                         </p>
                         <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
-                            <SearchBox />
+                            <SearchBox branches={[]} batches={[]} programmes={[]} />
                         </div>
                     </div>
                 </div>

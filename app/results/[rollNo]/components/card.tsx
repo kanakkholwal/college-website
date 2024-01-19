@@ -89,6 +89,7 @@ export function RankCard({ result }: {
 
 }
 
+
 export function SemCard({ semester }: {
     semester: Semester
 }) {

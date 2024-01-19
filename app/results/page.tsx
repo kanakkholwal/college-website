@@ -5,19 +5,31 @@ import { ResultCard, SkeletonCard } from "./components/card";
 import Pagination from "./components/pagination";
 import SearchBox from "./components/search";
 
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 export default async function ResultPage({
     searchParams,
 }: {
     searchParams?: {
-        query?: string;
-        page?: string;
+        query?: string,
+        page?: string,
+        batch?:string,
+        branch?:string,
+        programme?:string,
+
     };
 }) {
     const query = searchParams?.query || '';
     const currentPage = Number(searchParams?.page) || 1;
-    const { results, totalPages } = await getResults(query, currentPage);
+    const filter = {
+        // batch:Number(searchParams?.page) || "*",
+        branch:searchParams?.branch || '',
+        programme:searchParams?.programme || ''
+    }
+    
+    const { results, totalPages,branches,programmes,batches } = await getResults(query, currentPage,filter);
+
 
     return (<>
         <div className="relative mb-28" id="home">
@@ -34,7 +46,12 @@ export default async function ResultPage({
                             NITH Portal is a platform for students of NITH to get all the resources at one place.
                         </p>
                         <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
-                            <SearchBox />
+                            <Suspense fallback={<>
+                                <Skeleton className="h-12 w-full "/> 
+                            </>}>
+
+                            <SearchBox branches={branches} programmes={programmes} batches={batches} />
+                            </Suspense>
                         </div>
                     </div>
                 </div>

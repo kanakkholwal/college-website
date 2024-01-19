@@ -1,11 +1,10 @@
-import { Mail } from 'lucide-react';
+import { Mail, Undo2 } from 'lucide-react';
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import dbConnect from "src/lib/dbConnect";
 import ResultModel, { Semester } from "src/models/result";
 import { CgpiCard, RankCard, SemCard } from "./components/card";
 // import SemesterCGPIChart from "./components/chart";
-import { Undo2 } from 'lucide-react';
 
 
 export default async function ResultsPage({ params }: { params: { rollNo: string } }) {
@@ -78,7 +77,12 @@ export default async function ResultsPage({ params }: { params: { rollNo: string
                     return <SemCard key={index} semester={semester} />
                 })}
             </div>
-            {/* {result.semesters && <SemesterCGPIChart semesters={result.semesters} />} */}
+            {/* <Suspense fallback={<div style={{ height: 350, position: 'relative' }}>
+                <Skeleton className="w-full h-full" />
+            </div>}>
+                {result.semesters && <SemesterCGPIChart semesters={result.semesters} />}
+
+            </Suspense> */}
 
         </div>
     </>)
