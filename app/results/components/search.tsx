@@ -84,6 +84,16 @@ export default function SearchBox({ branches, batches, programmes }: Props) {
                     <div className="mb-4">
                         <p className="text-sm font-semibold text-slate-600 mb-2">By Branches</p>
                         <div className="flex flex-wrap gap-2">
+                        <Button
+                                variant="slate"
+                                size="sm"
+                                className={"text-xs !h-8 " + ((searchParams.get('branch')?.toString() === "all") ? "bg-accent-foreground hover:bg-accent-foreground/90 text-white" : "")}
+                                onClick={() => {
+                                    handleFilter("branch","all")
+                                }}
+                            >
+                                All
+                            </Button>
                             {branches.map((branch) => (
                                 <Button
                                     key={branch}
@@ -106,17 +116,16 @@ export default function SearchBox({ branches, batches, programmes }: Props) {
                             By Batch
                         </p>
                         <div className="flex flex-wrap gap-2">
-                            {/* <Button
+                            <Button
                                 variant="slate"
                                 size="sm"
-                                className={"text-xs !h-8 " + (filter.categories.length === 0 ? "bg-accent-foreground hover:bg-accent-foreground/90 text-white" : "")}
+                                className={"text-xs !h-8 " + ((searchParams.get('batch')?.toString() === "all") ? "bg-accent-foreground hover:bg-accent-foreground/90 text-white" : "")}
                                 onClick={() => {
-                                    setFilter({ ...filter, categories: [] })
-
+                                    handleFilter("batch","all")
                                 }}
                             >
                                 All
-                            </Button> */}
+                            </Button>
                             {batches.map((batch) => (
                                 <Button
                                     key={batch}
@@ -138,17 +147,16 @@ export default function SearchBox({ branches, batches, programmes }: Props) {
                             By Programme
                         </p>
                         <div className="flex flex-wrap gap-2">
-                            {/* <Button
+                        <Button
                                 variant="slate"
                                 size="sm"
-                                className={"text-xs !h-8 " + (filter.categories.length === 0 ? "bg-accent-foreground hover:bg-accent-foreground/90 text-white" : "")}
+                                className={"text-xs !h-8 " + ((searchParams.get('programme')?.toString() === "all") ? "bg-accent-foreground hover:bg-accent-foreground/90 text-white" : "")}
                                 onClick={() => {
-                                    setFilter({ ...filter, categories: [] })
-
+                                    handleFilter("programme","all")
                                 }}
                             >
                                 All
-                            </Button> */}
+                            </Button>
                             {programmes.map((programme) => (
                                 <Button
                                     key={programme}

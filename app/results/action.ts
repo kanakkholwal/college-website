@@ -18,18 +18,20 @@ export async function getResults(query: string, currentPage: number, filter: {
             { "rollNo": { $regex: query, $options: "i" } },
             { "name": { $regex: query, $options: "i" } },
         ],
-    };
+    } as unknown as any;
 
-    // Apply filters if provided
-    if (filter.branch) {
+    // Apply filters if provided and not equal to "all"
+    if (filter.branch && filter.branch !== "all") {
         filterQuery["branch"] = filter.branch;
     }
 
-    if (filter.programme) {
+
+    if (filter.programme && filter.programme !== "all") {
         filterQuery["programme"] = filter.programme;
     }
 
-    if (filter.batch) {
+
+    if (filter.batch && filter.batch.toString() !== "all") {
         filterQuery["batch"] = filter.batch;
     }
 
