@@ -1,9 +1,25 @@
+
+import { Button } from "@/components/ui/button";
+import {
+    Card,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
-import { getCourses } from "./actions";
+import { getCourses } from "src/lib/course/actions";
 import Pagination from "./components/pagination";
 import SearchBox from "./components/search";
 
+export const metadata: Metadata = {
+    title: "Syllabus Search",
+    description: "Search for syllabus of any course in NITH",
+    keywords: ["NITH", "Syllabus", "Courses", "NITH Courses", "NITH Syllabus", "Syllabus Search", "NITH Syllabus Search", "NITH Courses Search"]
+}
 export default async function CoursesPage({
     searchParams,
 }: {
@@ -51,10 +67,37 @@ export default async function CoursesPage({
                 </div>
             </div>
         </div>
+        <div className="max-w-[100rem] mx-auto px-6 md:px-12 xl:px-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+            <Suspense key="Courses" fallback={<>
+                <Skeleton className="h-12 w-full " />
+                <Skeleton className="h-12 w-full " />
+                <Skeleton className="h-12 w-full " />
+            </>}>
+                {courses.map((course) => {
+                    return <Card key={course._id} className="hover:shadow-lg">
+                        <CardHeader>
+                            <CardTitle>{course.name}</CardTitle>
+                            <CardDescription className="font-semibold">{course.code}</CardDescription>
+                        </CardHeader>
+                        <CardFooter className="justify-between">
+                            <Button size="sm" variant="default_light" className="uppercase">
+                                {course.type}
+                            </Button>
+                            <Button size="sm" variant="default" asChild>
+                                <Link href={`/syllabus/${course.code}`}>
+                                    View Course
+                                </Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                })}
+            </Suspense>
+        </div>
 
         <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6">
-            {courses.length > 0 ? <Pagination totalPages={totalPages} />:null}
-            
+            {courses.length > 0 ? <Pagination totalPages={totalPages} /> : null}
+
         </div>
     </>
 }

@@ -19,23 +19,15 @@ import {
 } from "@/components/ui/select";
 import { useReducer } from 'react';
 import toast from "react-hot-toast";
-import { ChapterType, CourseType, booksAndRefType, prevPaperType } from "src/models/course";
+import { ChapterType, CourseTypeWithId, booksAndRefType, prevPaperType } from "src/models/course";
 import { ACTION_TYPES, courseFormReducer } from "./store";
 
-export default function NewCourseForm({ departments, saveCourse }: {
+export function EditCourseForm({ departments, saveCourse,course }: {
     departments: string[],
-    saveCourse: (courseData: CourseType) => Promise<CourseType>
+    saveCourse: (courseData: CourseTypeWithId) => Promise<CourseTypeWithId>,
+    course: CourseTypeWithId
 }) {
-    const [state, dispatch] = useReducer(courseFormReducer, {
-        name: "",
-        code: "",
-        credits: 0,
-        department: "",
-        type: "core",
-        chapters: [],
-        books_and_references: [],
-        prev_papers: [],
-    } as CourseType);
+    const [state, dispatch] = useReducer(courseFormReducer, course);
 
     const {
         name,
@@ -47,7 +39,7 @@ export default function NewCourseForm({ departments, saveCourse }: {
         books_and_references,
         prev_papers,
     } = state;
-    const handleChange = (field: keyof CourseType, value: any) => {
+    const handleChange = (field: keyof CourseTypeWithId, value: any) => {
         dispatch({ type: ACTION_TYPES.SET_FIELD, field, value });
     };
 
@@ -319,16 +311,13 @@ export default function NewCourseForm({ departments, saveCourse }: {
         <CardFooter>
             <Button type="submit" size="lg" className="w-full max-w-md mx-auto" onClick={() => {
                 toast.promise(saveCourse(state), {
-                    loading: "Creating Course",
-                    success: () => {
-                        dispatch({ type: ACTION_TYPES.RESET_COURSE });
-                        return "Course Created";
-                    },
-                    error: "Failed to create course",
+                    loading: "Updating Course",
+                    success:"Course Updated",
+                    error: "Failed to update course",
                 });
             }}>
                 <Send className="mr-2 h-5 w-5" />
-                Create Course
+                Update Course
             </Button>
         </CardFooter>
     </>

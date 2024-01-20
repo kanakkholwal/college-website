@@ -2,10 +2,11 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import dbConnect from "src/lib/dbConnect";
+import ResultModel from "src/models/result";
 import UserModel from "src/models/user";
+
 import { sessionUserType } from "src/types/session";
 
-import { determineDepartment } from "src/controllers/scraper";
 interface AuthEnv {
     GOOGLE_ID: string;
     GOOGLE_SECRET: string;
@@ -119,7 +120,7 @@ export const authOptions: NextAuthOptions = {
             async profile(profile) {
                 try {
                     console.log(profile);
-                    if (profile.email.split("@")[1] !== "nith.ac.in") {
+                    if (profile.email.split("@")[1] !== "nith.ac.in" ) {
                         return Promise.reject({
                             status: 401,
                             message: "Only NITH emails are allowed",
@@ -129,19 +130,27 @@ export const authOptions: NextAuthOptions = {
                     await dbConnect();
                     const userInDb = await UserModel.findOne({ email: profile.email })
                     if (!userInDb) {
-                        console.log("user not found, creating new user", profile)
+                        console.log("user not found, creating new user", profile);
+                        //  find roll no from result
+                        const result = await ResultModel.findOne({ rollNo: profile.email.split("@")[0] });
+                        if (!result) {
+                            return Promise.reject({
+                                status: 401,
+                                message: "No result found for this roll no, Please contact admin",
+                                success: false
+                            })
+                        }
                         const user = new UserModel({
-                            email: profile.email,
-                            firstName: profile.given_name ? profile.given_name : profile.name.split(" ")[0],
-                            lastName: profile.family_name ? profile.family_name : profile.name.split(" ")[1],
-                            username: profile.email.split("@")[0],
+                            email: result.rollNo + "@nith.ac.in",
+                            firstName: result.name.split(" ")[0],
+                            lastName: result.name.split(" ")[1],
+                            rollNo: result.rollNo,
                             profilePicture: profile.picture,
                             password: "google" + profile.sub,
                             roles: ["student"],
                             gender: null,
                             phone: null,
-                            department: determineDepartment(profile.email.split("@")[0]),
-
+                            department: result.branch,
                         });
                         await user.save();
 

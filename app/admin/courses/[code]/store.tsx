@@ -1,4 +1,4 @@
-import { ChapterType, CourseType, booksAndRefType, prevPaperType } from "src/models/course";
+import { ChapterType, CourseTypeWithId, booksAndRefType, prevPaperType } from "src/models/course";
 
 // Define action types
 export const ACTION_TYPES = {
@@ -15,7 +15,7 @@ export const ACTION_TYPES = {
     RESET_COURSE: 'RESET_COURSE',
 } as const;
 type Action =
-    | { type: typeof ACTION_TYPES.SET_FIELD; field: keyof CourseType; value: any }
+    | { type: typeof ACTION_TYPES.SET_FIELD; field: keyof CourseTypeWithId; value: any }
     | { type: typeof ACTION_TYPES.ADD_CHAPTER; chapter: ChapterType }
     | { type: typeof ACTION_TYPES.UPDATE_CHAPTER; index: number; chapter: ChapterType }
     | { type: typeof ACTION_TYPES.REMOVE_CHAPTER; index: number }
@@ -27,7 +27,7 @@ type Action =
     | { type: typeof ACTION_TYPES.REMOVE_PREV_PAPER; index: number }
     | { type: typeof ACTION_TYPES.RESET_COURSE };
 // Reducer function
-export const courseFormReducer = (state: CourseType, action: Action): CourseType => {
+export const courseFormReducer = (state: CourseTypeWithId, action: Action): CourseTypeWithId => {
     switch (action.type) {
         case ACTION_TYPES.SET_FIELD:
             return { ...state, [action.field]: action.value };
@@ -81,6 +81,7 @@ export const courseFormReducer = (state: CourseType, action: Action): CourseType
             };
         case ACTION_TYPES.RESET_COURSE:
             return {
+               ...state,
                 name: "",
                 code: "",
                 credits: 0,
