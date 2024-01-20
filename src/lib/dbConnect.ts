@@ -23,6 +23,7 @@ let cached = global.mongoose || { conn: null, promise: null };
 if (!cached) {
     cached = global.mongoose = { conn: null, promise: null };
 }
+// const defaultDb = process.env.NODE_ENV === "production"? "main":"testing"
 
 async function dbConnect(dbName :string = "result"): Promise<Mongoose> {
     if (cached.conn) {
@@ -38,7 +39,7 @@ async function dbConnect(dbName :string = "result"): Promise<Mongoose> {
             mongoose.set('strictQuery', false);
             cached.promise = mongoose.connect(MONGODB_URI, opts)
                 .then((mongoose) => {
-                    console.log("Connected to MongoDB");
+                    console.log("Connected to MongoDB to database:", dbName);
                     return mongoose;
                 });
         } catch (err) {

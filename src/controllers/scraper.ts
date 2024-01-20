@@ -1,8 +1,8 @@
 import axios from "axios";
-import * as cheerio from 'cheerio';
+// import * as cheerio from 'cheerio';
 import { ResultType } from "src/types/result";
 // import { CheerioElement } from 'cheerio';
-
+import HTMLParser from "node-html-parser";
 
 const fetchData = async (url: string, RollNo: string, headers: Record<string, string>) => {
 
@@ -44,9 +44,14 @@ const parseResult = (result: string | null, info: {
             reject("Invalid Roll No");
             return;
         }
+        const document = HTMLParser.parse(result);
+        if(!document.querySelector("#page-wrap")){
+            console.log("Invalid Roll No");
+            reject("Invalid Roll No");
+            return;
+        }
         console.log("Result is available");
 
-        const $: cheerio.CheerioAPI = cheerio.load(result);
         const student: ResultType = {
             name: "",
             rollNo: info.rollNo,
@@ -56,78 +61,48 @@ const parseResult = (result: string | null, info: {
             semesters: [],
         };
 
-        student.name =
-            $('table')
-                .eq(1)
-                .find('td:nth-child(2)>p:nth-child(2)')
-                ?.text()
-                .trim() || "";
+        student.name = document.querySelectorAll('table')[1].querySelector('td:nth-child(2)>p:nth-child(2)')?.innerText.trim() || ""
+        document.querySelector(".pagebreak")?.remove();
+        const subject_tables = document.querySelectorAll("table:nth-child(odd):nth-child(n + 3):not(:last-of-type)");
+        subject_tables.forEach((table, index) => {
+            if (!student.semesters[index]) {
 
-        $('.pagebreak')?.remove();
-
-        $('table:nth-child(odd):nth-child(n + 3):not(:last-of-type)').each(
-            (index: number, table: cheerio.Element) => {
-                if (!student.semesters[index]) {
-                    student.semesters.push({
+                student.semesters.push(
+                    {
                         semester: 0,
                         sgpi: 0,
                         sgpi_total: 0,
                         cgpi: 0,
                         cgpi_total: 0,
-                        courses: [],
-                    });
-                }
-                $(table)
-                    .find('tr:not([class])')
-                    .each((trIndex: number, tr: cheerio.Element) => {
-                        const semester = parseFloat(
-                            $(tr).find('td:nth-child(6)').text() || "0.00"
-                        );
-                        const semester_total = parseFloat(
-                            $(tr).find('td:nth-child(4)').text() || "1"
-                        );
-                        student.semesters[index].courses.push({
-                            name: $(tr).find('td:nth-child(2)').text().trim() || "",
-                            code: $(tr).find('td:nth-child(3)').text().trim() || "",
-                            cgpi: semester / semester_total,
-                        });
-                    });
+                        courses: []
+                    }
+                )
             }
-        );
-
-        $('table:nth-child(even):nth-child(n + 3):not(:last-of-type)').each(
-            (index: number, table: cheerio.Element) => {
-                $(table)
-                    .find('td')
-                    .each((i: number, td: cheerio.Element) => {
-                        student.semesters[index].semester = ("0" + (index + 1)).slice(-2) as unknown as number;
-                        student.semesters[index].sgpi = $(td)
-                            .eq(1)
-                            .text()
-                            .trim()
-                            .split("=")[1] as unknown as number;
-                        student.semesters[index].sgpi_total = $(td)
-                            .eq(2)
-                            .text()
-                            .trim()
-                            .split(" ")
-                            .pop() as unknown as number;
-                        student.semesters[index].cgpi = $(td)
-                            .eq(3)
-                            .text()
-                            .trim()
-                            .split("=")[1] as unknown as number;
-                        student.semesters[index].cgpi_total = $(td)
-                            .eq(4)
-                            .text()
-                            .trim()
-                            .split(" ")
-                            .pop() as unknown as number;
-                    });
-            }
-        );
+            table.querySelectorAll("tr:not([class])").forEach((tr) => {
+                let semester = parseFloat(tr.querySelector("td:nth-child(6)")?.textContent || "0.00");
+                let semester_total = parseFloat(tr.querySelector("td:nth-child(4)")?.textContent || "1");
+                student.semesters[index].courses.push({
+                    name: tr.querySelector("td:nth-child(2)")?.innerText.trim() || "",
+                    code: tr.querySelector("td:nth-child(3)")?.innerText.trim() || "",
+                    cgpi: semester / semester_total
+                });
+            });
+        });
+        const result_tables = document.querySelectorAll("table:nth-child(even):nth-child(n + 3):not(:last-of-type)");
+        result_tables.forEach((table, index) => {
+            table.querySelectorAll("td").forEach((td, i, array) => {
+                student.semesters[index].semester = ("0" + (index + 1)).slice(-2) as unknown as number;
+                student.semesters[index].sgpi = array[1].innerText.trim().split("=")[1] as unknown as number;
+                student.semesters[index].sgpi_total = array[2].innerText.trim().split(" ").pop() as unknown as number;
+                student.semesters[index].cgpi = array[3].innerText.trim().split("=")[1] as unknown as number;
+                student.semesters[index].cgpi_total = array[4].innerText.trim().split(" ").pop() as unknown as number;
+            });
+        });
 
         resolve(student);
+        console.log("Result parsed");
+
+        return resolve(student);
     });
 };
 
@@ -151,6 +126,8 @@ export async function ScrapeResult(rollNo: string): Promise<ResultType> {
                 rollNo,
                 ...getInfo(rollNo)
             });
+            resolve(student);
+            console.log("resolved")
         } catch (err) {
             reject(err);
         }
@@ -183,8 +160,8 @@ const headerMap: Record<number, {
         RequestVerificationToken: "DA92D62F-BF6E-B268-4E04-F419F5EA6233"
     },
     23: {
-        url: "http://results.nith.ac.in/scheme22/studentresult/result.asp",
-        Referer: "http://results.nith.ac.in/scheme22/studentresult/index.asp",
+        url: "http://results.nith.ac.in/scheme23/studentresult/result.asp",
+        Referer: "http://results.nith.ac.in/scheme23/studentresult/index.asp",
         CSRFToken: "{F1E16363-FEDA-48AF-88E9-8A186425C213}",
         RequestVerificationToken: "4FFEE8F3-14C9-27C4-B370-598406BF99C1"
     }
@@ -196,6 +173,7 @@ function getInfo(rollNo: string) {
         rollNo.toLowerCase().substring(2, 5),
         rollNo.toLowerCase().substring(5, 8),
     ]
+
     return {
         batch: parseInt("20" + matches[0]),
         branch: determineDepartment(rollNo),
