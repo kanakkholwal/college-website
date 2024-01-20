@@ -15,14 +15,17 @@ const nextConfig = withPWA({
     swcMinify: true,
     crossOrigin: 'anonymous',
     images: {
-    domains: ['res.cloudinary.com',"global-uploads.webflow.com" ],
-    // remotePatterns: [
-    //   {
-    //     protocol: 'https',
-    //     hostname: "**",
-    //   },
-    // ],
-},
+        domains: ['res.cloudinary.com',"global-uploads.webflow.com" ],
+            // remotePatterns: [
+            //   {
+            //     protocol: 'https',
+            //     hostname: "**",
+            //   },
+            // ],
+    },
+    experimental: {
+        missingSuspenseWithCSRBailout: false,
+    },
 
 });
 

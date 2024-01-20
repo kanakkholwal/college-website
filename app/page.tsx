@@ -30,7 +30,7 @@ const features = [
 
 ]
 
-export default async function HomePage() {
+export default function HomePage() {
 
 
 

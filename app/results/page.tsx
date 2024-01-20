@@ -46,10 +46,7 @@ export default async function ResultPage({
                             NITH Portal is a platform for students of NITH to get all the resources at one place.
                         </p>
                         <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
-                            <Suspense fallback={<>
-                                <Skeleton className="h-12 w-full " />
-                            </>}>
-
+                            <Suspense  key={"key_search_bar"} fallback={<Skeleton className="h-12 w-full " />}>
                                 <SearchBox branches={branches} programmes={programmes} batches={batches} />
                             </Suspense>
                         </div>
@@ -58,7 +55,7 @@ export default async function ResultPage({
             </div>
         </div>
         <div className="max-w-[100rem] mx-auto px-6 md:px-12 xl:px-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <Suspense fallback={<>
+            <Suspense  key={"results_key"} fallback={<>
                 <SkeletonCard />
                 <SkeletonCard />
                 <SkeletonCard />
@@ -74,12 +71,12 @@ export default async function ResultPage({
             </Suspense>
         </div>
         <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6">
-        <Suspense fallback={<>
-                                <Skeleton className="h-12 w-full " />
-                            </>}>
+            <Suspense  key={"Pagination_key"} fallback={<>
+                <Skeleton className="h-12 w-full " />
+            </>}>
 
-            <Pagination totalPages={totalPages} />
-                            </Suspense>
+                <Pagination totalPages={totalPages} />
+            </Suspense>
         </div>
     </>)
 }

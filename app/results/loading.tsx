@@ -1,7 +1,6 @@
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonCard } from "./components/card";
-import Pagination from "./components/pagination";
-import SearchBox from "./components/search";
 
 
 
@@ -32,7 +31,7 @@ export default async function ResultPage({
                             NITH Portal is a platform for students of NITH to get all the resources at one place.
                         </p>
                         <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
-                            <SearchBox branches={[]} batches={[]} programmes={[]} />
+                            <Skeleton className="h-12 w-full " />
                         </div>
                     </div>
                 </div>
@@ -47,7 +46,7 @@ export default async function ResultPage({
             <SkeletonCard />
         </div>
         <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6">
-            <Pagination totalPages={totalPages} />
+            
         </div>
     </>)
 }

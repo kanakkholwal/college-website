@@ -57,13 +57,12 @@ export default function SearchBox({ branches, batches, programmes }: Props) {
 
     return <div className="relative flex items-stretch w-full rounded-full">
         <div className="absolute top-0 bottom-0 left-0">
-        <Suspense fallback={<button className="relative flex h-12 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-primary/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-gray-800 sm:w-max">
+        <Suspense key={"filter_key"} fallback={<button className="relative flex h-12 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-primary/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-gray-800 sm:w-max">
                         <span className="relative text-base font-semibold text-primary dark:text-white">
                             <IoMdOptions className="w-5 h-5" />
                         </span>
                     </button>}>
 
-       
             <Sheet open={open} onOpenChange={setOpen}>
                 <SheetTrigger asChild>
                     <button className="relative flex h-12 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-primary/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-gray-800 sm:w-max">
@@ -197,12 +196,14 @@ export default function SearchBox({ branches, batches, programmes }: Props) {
             </Sheet>
             </Suspense>
         </div>
+        <Suspense  key={"search_key"} fallback={<Input placeholder="Search by Roll No. or Name " className="w-full rounded-full px-20 border border-border h-12 " />}>
         <Input placeholder="Search by Roll No. or Name " className="w-full rounded-full px-20 border border-border h-12 "
             defaultValue={searchParams.get('query')?.toString()}
             onChange={(e) => {
                 handleSearch(e.target.value);
             }}
         />
+        </Suspense>
         <div className="absolute top-0 bottom-0 right-0">
 
             <button className="relative flex h-12 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:bg-primary before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 sm:w-max">
