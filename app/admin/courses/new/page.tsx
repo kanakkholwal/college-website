@@ -1,19 +1,23 @@
-"use server";
-import { Button } from "@/components/ui/button";
+
 import dbConnect from "src/lib/dbConnect";
 import CourseModel from "src/models/course";
 
 import {
     Card,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import ResultModel from "src/models/result";
-
+import { Metadata } from "next";
 import { revalidatePath } from "next/cache";
+import ResultModel from "src/models/result";
 import NewCourseForm from "./form";
+
+export const metadata:Metadata= {
+    title: "New Course | Admin",
+    description: "Create a new course"
+
+}
 
 export default async function CoursesPage() {
     await dbConnect();
@@ -56,11 +60,7 @@ export default async function CoursesPage() {
                 </CardDescription>
             </CardHeader>
             <NewCourseForm />
-            <CardFooter>
-                <Button type="submit">
-                    Create Course
-                </Button>
-            </CardFooter>
+        
         </Card>
 
     </>

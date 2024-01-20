@@ -36,7 +36,7 @@ export default async function CoursesPage({
                 <div className="relative pt-36 ml-auto">
                     <div className="lg:w-3/4 text-center mx-auto">
                         <h1 className="text-gray-900 dark:text-white font-bold text-5xl md:text-6xl xl:text-7xl">
-                            Courses <span className="text-primary">Search</span>
+                            Syllabus <span className="text-primary">Search</span>
                         </h1>
 
                         <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
