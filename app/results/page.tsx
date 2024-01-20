@@ -23,7 +23,7 @@ export default async function ResultPage({
     const query = searchParams?.query || '';
     const currentPage = Number(searchParams?.page) || 1;
     const filter = {
-        // batch:Number(searchParams?.page) || "*",
+        batch:Number(searchParams?.batch),
         branch: searchParams?.branch || '',
         programme: searchParams?.programme || ''
     }
