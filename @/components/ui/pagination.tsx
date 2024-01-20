@@ -37,7 +37,8 @@ PaginationItem.displayName = "PaginationItem"
 type PaginationLinkProps = {
   isActive?: boolean
 } & Pick<ButtonProps, "size"> &
-  React.ComponentProps<"a"> & React.ComponentProps<typeof Link>
+  React.ComponentProps<"a"> 
+  & React.ComponentProps<typeof Link>
 
 const PaginationLink = ({
   className,
@@ -52,7 +53,10 @@ const PaginationLink = ({
         variant: isActive ? "outline" : "ghost",
         size,
       }),
-      className
+      "border border-border hover:bg-slate-100 dark:hover:bg-slate-700 dark:border-border dark:text-white",
+      `${isActive ? "bg-primary/10 dark:hover:bg-primary/90" : ""}}`,
+      className,
+      
     )}
     {...props}
   />

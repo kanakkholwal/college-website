@@ -45,7 +45,7 @@ export default function Paginate({ totalPages }: { totalPages: number }) {
                 <PaginationLink
                   href={createPageURL(pageNumber)}
                   isActive={pageNumber === currentPage}
-                >
+                  replace={true}>
                   {pageNumber}
                 </PaginationLink>
               </PaginationItem>
