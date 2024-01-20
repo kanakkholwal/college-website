@@ -23,9 +23,9 @@ let cached = global.mongoose || { conn: null, promise: null };
 if (!cached) {
     cached = global.mongoose = { conn: null, promise: null };
 }
-// const defaultDb = process.env.NODE_ENV === "production"? "main":"testing"
+const defaultDb = process.env.NODE_ENV === "production"? "main":"testing"
 
-async function dbConnect(dbName :string = "result"): Promise<Mongoose> {
+async function dbConnect(dbName :string = defaultDb): Promise<Mongoose> {
     if (cached.conn) {
         return cached.conn;
     }
