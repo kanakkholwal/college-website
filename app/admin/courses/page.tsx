@@ -69,7 +69,6 @@ export default async function CoursesPage({
             {courses.map((course) => {
                 return <Card key={course._id} className="hover:shadow-lg">
                     <CardHeader>
-                  
                             <CardTitle>{course.name}</CardTitle>
                             <CardDescription className="font-semibold">{course.code}</CardDescription>
                     </CardHeader>
