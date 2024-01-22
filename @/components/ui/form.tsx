@@ -1,7 +1,6 @@
-"use client";
+import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
-import * as React from "react"
 import {
   Controller,
   ControllerProps,
@@ -11,8 +10,8 @@ import {
   useFormContext,
 } from "react-hook-form"
 
-import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
+import { Label } from "@/components/ui/label"
 
 const Form = FormProvider
 
@@ -105,7 +104,7 @@ FormLabel.displayName = "FormLabel"
 const FormControl = React.forwardRef<
   React.ElementRef<typeof Slot>,
   React.ComponentPropsWithoutRef<typeof Slot>
->(({ className,...props }, ref) => {
+>(({ ...props }, ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
   return (
@@ -118,7 +117,6 @@ const FormControl = React.forwardRef<
           : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
-      className={cn("ring-destructive ", className)}
       {...props}
     />
   )
@@ -167,8 +165,12 @@ const FormMessage = React.forwardRef<
 FormMessage.displayName = "FormMessage"
 
 export {
-  Form, FormControl,
-  FormDescription, FormField, FormItem,
-  FormLabel, FormMessage, useFormField
+  useFormField,
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
 }
-

@@ -1,17 +1,18 @@
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Mail, Undo2 } from 'lucide-react';
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from 'react';
 import dbConnect from "src/lib/dbConnect";
 import ResultModel, { Semester } from "src/models/result";
 import { CgpiCard, RankCard, SemCard } from "./components/card";
-// import SemesterCGPIChart from "./components/chart";
-
+import { CGPIChart, CGPIChartLoader } from "./components/chart";
 
 export default async function ResultsPage({ params }: { params: { rollNo: string } }) {
     await dbConnect();
     const result = await ResultModel.findOne({
         rollNo: params.rollNo
-    });
+    }).exec();
     if (!result) {
         return notFound()
     }
@@ -72,17 +73,32 @@ export default async function ResultsPage({ params }: { params: { rollNo: string
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white text-center mx-auto mt-24 mb-10">
                 Semester Wise Results
             </h2>
-            <div className="max-w-6xl mx-auto px-6 md:px-12 xl:px-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                {result.semesters?.map((semester: Semester, index: number) => {
-                    return <SemCard key={index} semester={semester} />
-                })}
-            </div>
-            {/* <Suspense fallback={<div style={{ height: 350, position: 'relative' }}>
-                <Skeleton className="w-full h-full" />
-            </div>}>
-                {result.semesters && <SemesterCGPIChart semesters={result.semesters} />}
 
-            </Suspense> */}
+
+            <Tabs defaultValue="table">
+                <div className="flex items-center w-full mb-5">
+
+                <TabsList className="mx-auto">
+                    <TabsTrigger value="table">Tabular View</TabsTrigger>
+                    <TabsTrigger value="graph">Graphical View</TabsTrigger>
+                </TabsList>
+                </div>
+                <TabsContent value="table">
+                    <div className="max-w-6xl mx-auto px-6 md:px-12 xl:px-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                        {result.semesters?.map((semester: Semester, index: number) => {
+                            return <SemCard key={index} semester={semester} />
+                        })}
+                    </div>
+                </TabsContent>
+                <TabsContent value="graph">
+                    <div className="max-w-6xl mx-auto px-6 md:px-12 xl:px-6 my-5">
+                        <Suspense fallback={<CGPIChartLoader />}>
+                            <CGPIChart semesters={JSON.parse(JSON.stringify(result.semesters))} />
+                        </Suspense>
+                    </div>
+                </TabsContent>
+            </Tabs>
+
 
         </div>
     </>)

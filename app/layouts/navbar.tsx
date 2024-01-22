@@ -60,7 +60,7 @@ export default function Navbar() {
                 {nav_items.map((item, i) => {
                   return (<NavigationMenuItem key={i}>
                     <Link href={item.href} legacyBehavior passHref>
-                      <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                      <NavigationMenuLink className={navigationMenuTriggerStyle() + " rounded-full"}>
                         {item.title}
                       </NavigationMenuLink>
                     </Link>

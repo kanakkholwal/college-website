@@ -13,8 +13,6 @@ export type prevPaperType = {
     year: number,
     exam: "midsem" | "endsem" | "others",
     link: string,
-    name: string,
-    preview?: string,
 }
 
 const chapterSchema = new Schema<ChapterType>({
@@ -31,7 +29,6 @@ const chapterSchema = new Schema<ChapterType>({
     lectures: Number,
 })
 export interface CourseType {
-
     name: string;
     code: string;
     type: string;
@@ -77,14 +74,20 @@ const courseSchema = new Schema<CourseDocument>({
     department: { type: String, required: true },
     prev_papers: {
         type: [{
-            year: Number,
             exam: {
                 type: String,
-                enums: ["mid", "end", "others"]
+                enums: ["mid", "end", "others"],
+                required: true
             },
-            link: String,
-            name: String,
-            preview: String,
+            link: {
+                type: String,
+                required: true,
+                trim: true
+            },
+            year: {
+                type: Number,
+                required: true
+            },
         }],
         required: true,
     },

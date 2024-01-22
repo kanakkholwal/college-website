@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 // import { Suspense } from "react";
+import { Badge } from "@/components/ui/badge";
+
 import {
     Card,
     CardContent,
@@ -12,7 +14,7 @@ import { Undo2 } from 'lucide-react';
 import Link from "next/link";
 import { getCourseByCode } from "src/lib/course/actions";
 import dbConnect from "src/lib/dbConnect";
-
+import { AddPrevsModal } from "./modal";
 
 export default async function CoursePage({ params }: { params: { code: string } }) {
     await dbConnect();
@@ -20,7 +22,32 @@ export default async function CoursePage({ params }: { params: { code: string } 
     if (!course) {
         return notFound()
     }
-    console.log(course)
+    console.log(course);
+    async function addPrevPaper( {
+        exam,
+        year,
+        link
+    }: {
+        exam: string,
+        year: number,
+        link: string,
+    }) {
+        "use server";
+        await dbConnect();
+        // const course = await CourseModel.findOne({ code:course.code });
+        // if (!course) {
+        //     return;
+        // }
+        // course.prev_papers.push({
+        //     exam,
+        //     name,
+        //     link
+        // })
+        // await course.save();
+
+        return course;
+    }
+
 
     return <>
         <div className="relative mb-24" id="home">
@@ -69,7 +96,7 @@ export default async function CoursePage({ params }: { params: { code: string } 
         </div>
         <div className="max-w-6xl mx-auto px-6 md:px-12 xl:px-6">
             <Tabs defaultValue="chapters">
-                <TabsList  className="mx-auto w-full bg-transparent font-bold">
+                <TabsList className="mx-auto w-full bg-transparent font-bold">
                     <TabsTrigger value="chapters">Chapters</TabsTrigger>
                     <TabsTrigger value="books_and_references">Books and References</TabsTrigger>
                     <TabsTrigger value="prev_papers">Previous Year Papers</TabsTrigger>
@@ -99,10 +126,32 @@ export default async function CoursePage({ params }: { params: { code: string } 
                     </div>
                 </TabsContent>
                 <TabsContent value="books_and_references">
-                    Any Books and References will be shown here.
+                    <p className="text-center text-gray-500 dark:text-gray-400 text-xl font-semibold">
+                        Any Books and References will be shown here.
+                    </p>
                 </TabsContent>
                 <TabsContent value="prev_papers">
-                    Any Previous Year Papers will be shown here.
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {course.prev_papers.map((paper, index) => {
+                        return <Card key={index}>
+                            <CardHeader>
+                                    <CardTitle className="capitalize">{paper.exam}</CardTitle>
+                                    <CardDescription>
+                                        <Badge className="bg-primary">{paper.year}</Badge>
+                                    </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <a href={paper.link} target="_blank" className="text-sm font-medium line-clamp-1">
+                                    {paper.link}
+                                </a>
+                            </CardContent>
+                        </Card>
+                    })}
+                    </div>
+                    <p className="text-center text-gray-500 dark:text-gray-400 text-xl font-semibold">
+                        Any Previous Year Papers will be shown here.
+                    </p>
+                    <AddPrevsModal code={course.code}  />
                 </TabsContent>
             </Tabs>
 
