@@ -30,9 +30,9 @@ const links: LinkType[] = [
         roles: ["cr", "faculty"],
     },
     {
-        label: "Classrooms",
+        label: "Rooms",
         icon: LuBuilding2,
-        href: "/dashboard/classrooms",
+        href: "/dashboard/rooms",
         roles: ["cr", "faculty","admin"],
     },
     {

@@ -24,7 +24,6 @@ const chapterSchema = new Schema<ChapterType>({
     topics: {
         type: [String],
         trim: true,
-        required: true
     },
     lectures: Number,
 })
@@ -51,7 +50,6 @@ const courseSchema = new Schema<CourseDocument>({
     name: {
         type: String,
         trim: true,
-        unique: true,
         required: true
     },
     code: {
