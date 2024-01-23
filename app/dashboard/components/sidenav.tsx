@@ -32,13 +32,13 @@ const links: LinkType[] = [
     {
         label: "Classrooms",
         icon: LuBuilding2,
-        href: "/admin/classrooms",
+        href: "/dashboard/classrooms",
         roles: ["cr", "faculty","admin"],
     },
     {
         label: "Time Tables",
         icon: CalendarDays,
-        href: "/admin/time-tables",
+        href: "/dashboard/time-tables",
         roles: ["cr", "faculty","admin"],
     }
 ];
