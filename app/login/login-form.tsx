@@ -23,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from 'next/navigation';
 import { useForm } from "react-hook-form";
 import { AiOutlineLoading } from "react-icons/ai";
-import { toast } from "sonner";
+import  toast from "react-hot-toast"
 import * as z from "zod";
 
 const FormSchema = z.object({
@@ -67,12 +67,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
         toast.promise(signInPromise(data), {
             loading: 'Logging in...',
-            success: (data) => {
+            success: (data:any) => {
                 console.log(data);
                 setIsLoading(false)
                 return `Logged in successfully`
             },
-            error: (err) => {
+            error: (err:any) => {
                 console.log(err);
                 setIsLoading(false)
                 return err.message || "An error occurred while logging in"
