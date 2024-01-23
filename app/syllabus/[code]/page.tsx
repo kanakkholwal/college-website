@@ -13,19 +13,21 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { authOptions } from "app/api/auth/[...nextauth]/options";
 import { Undo2 } from 'lucide-react';
+import { getServerSession } from "next-auth/next";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { getCourseByCode } from "src/lib/course/actions";
 import dbConnect from "src/lib/dbConnect";
-import { booksAndRefType, prevPaperType } from "src/models/course";
+import CourseModel, { booksAndRefType, prevPaperType } from "src/models/course";
 import { AddPrevsModal, AddRefsModal } from "./modal";
-
-import { revalidatePath } from "next/cache";
-import CourseModel from "src/models/course";
 import { IconMap } from "./render-link";
 
 export default async function CoursePage({ params }: { params: { code: string } }) {
+    const session = await getServerSession(authOptions);
+
     await dbConnect();
     const course = await getCourseByCode(params.code)
     if (!course) {
@@ -132,18 +134,18 @@ export default async function CoursePage({ params }: { params: { code: string } 
                 </TabsContent>
                 <TabsContent value="books_and_references">
                     {course.books_and_references.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {course.books_and_references.map((ref :booksAndRefType, index:number) => {
-                            const iconsSrc  = IconMap.has(ref.type as booksAndRefType["type"]) ? IconMap.get(ref.type as booksAndRefType["type"]) : OthersPng;
+                        {course.books_and_references.map((ref: booksAndRefType, index: number) => {
+                            const iconsSrc = IconMap.has(ref.type as booksAndRefType["type"]) ? IconMap.get(ref.type as booksAndRefType["type"]) : OthersPng;
                             return <Card key={index}>
                                 <CardHeader className="md:flex-row md:justify-between gap-2">
                                     <div className="w-16 h-16 p-3 aspect-square rounded-full flex justify-center items-center  bg-slate-100 dark:bg-gray-800 font-bold text-lg">
-                                        {iconsSrc?  <Image src={iconsSrc} className="w-10 h-10" width={40} height={40} alt={ref.link} />: <Image src={OthersPng} className="w-10 h-10" width={40} height={40} alt={ref.link} />}
+                                        {iconsSrc ? <Image src={iconsSrc} className="w-10 h-10" width={40} height={40} alt={ref.link} /> : <Image src={OthersPng} className="w-10 h-10" width={40} height={40} alt={ref.link} />}
                                     </div>
                                     <div className="flex-auto grow">
                                         <CardTitle className="break-words">{ref.name}</CardTitle>
-                                            <a href={ref.link} target="_blank" className="text-primary mt-2 text-sm font-semibold" >
-                                                Go to Link
-                                            </a>
+                                        <a href={ref.link} target="_blank" className="text-primary mt-2 text-sm font-semibold" >
+                                            Go to Link
+                                        </a>
                                     </div>
 
                                 </CardHeader>
@@ -155,7 +157,13 @@ export default async function CoursePage({ params }: { params: { code: string } 
                         Any Books and References will be shown here.
                     </p>}
                     <div className="flex w-full items-center justify-center p-4">
-                        <AddRefsModal code={course.code} addReference={addReference} />
+                        {session?.user ? <AddRefsModal code={course.code} addReference={addReference} />:<p className="text-center text-gray-600 dark:text-gray-400 text-md font-semibold pt-5">
+                            <Link href="/login" className="text-primary font-semibold hover:underline">
+                                Login
+
+                            </Link> to add Books and References
+                        </p>}
+
                     </div>
 
                 </TabsContent>
@@ -182,7 +190,11 @@ export default async function CoursePage({ params }: { params: { code: string } 
                     </p>}
 
                     <div className="flex w-full items-center justify-center p-4">
-                        <AddPrevsModal code={course.code} addPrevPaper={addPrevPaper} />
+                        {session?.user ? <AddPrevsModal code={course.code} addPrevPaper={addPrevPaper} /> : <p className="text-center text-gray-600 dark:text-gray-400 text-md font-semibold pt-5">
+                            <Link href="/login" className="text-primary font-semibold hover:underline">
+                                Login
+
+                            </Link> to add Previous Year Papers</p>}
                     </div>
                 </TabsContent>
             </Tabs>
