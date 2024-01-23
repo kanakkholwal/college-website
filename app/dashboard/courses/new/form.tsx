@@ -85,7 +85,7 @@ export default function NewCourseForm({ departments, saveCourse }: {
             </div>
             <div className="flex flex-col gap-2">
                 <Label htmlFor="credits">Credits</Label>
-                <Input id="credits" name="credits" placeholder="Credits" variant="fluid"
+                <Input id="credits" type="number" defaultValue={0} name="credits" placeholder="Credits" variant="fluid"
                     value={credits}
                     onChange={(e) => {
                         handleChange("credits", parseInt(e.currentTarget.value));
