@@ -133,11 +133,11 @@ export default async function CoursePage({ params }: { params: { code: string } 
                 <TabsContent value="books_and_references">
                     {course.books_and_references.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {course.books_and_references.map((ref :booksAndRefType, index:number) => {
-
+                            const iconsSrc  = IconMap.has(ref.type as booksAndRefType["type"]) ? IconMap.get(ref.type as booksAndRefType["type"]) : OthersPng;
                             return <Card key={index}>
                                 <CardHeader className="md:flex-row md:justify-between gap-2">
                                     <div className="w-16 h-16 p-3 aspect-square rounded-full flex justify-center items-center  bg-slate-100 dark:bg-gray-800 font-bold text-lg">
-                                        <Image src={IconMap.has(ref.type) ? IconMap.get(ref.type) : OthersPng} className="w-10 h-10" width={40} height={40} alt={ref.link} />
+                                        {iconsSrc?  <Image src={iconsSrc} className="w-10 h-10" width={40} height={40} alt={ref.link} />: <Image src={OthersPng} className="w-10 h-10" width={40} height={40} alt={ref.link} />}
                                     </div>
                                     <div className="flex-auto grow">
                                         <CardTitle className="break-words">{ref.name}</CardTitle>
