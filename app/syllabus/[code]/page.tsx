@@ -14,7 +14,10 @@ import { Undo2 } from 'lucide-react';
 import Link from "next/link";
 import { getCourseByCode } from "src/lib/course/actions";
 import dbConnect from "src/lib/dbConnect";
-import { AddPrevsModal } from "./modal";
+import { booksAndRefType, prevPaperType } from "src/models/course";
+import { addPrev, addRef } from './actions';
+import { AddPrevsModal, AddRefsModal } from "./modal";
+
 
 export default async function CoursePage({ params }: { params: { code: string } }) {
     await dbConnect();
@@ -23,29 +26,33 @@ export default async function CoursePage({ params }: { params: { code: string } 
         return notFound()
     }
     console.log(course);
-    async function addPrevPaper( {
-        exam,
-        year,
-        link
-    }: {
-        exam: string,
-        year: number,
-        link: string,
-    }) {
+    async function addPrevPaper(paper:prevPaperType):Promise<boolean> {
         "use server";
         await dbConnect();
-        // const course = await CourseModel.findOne({ code:course.code });
-        // if (!course) {
-        //     return;
-        // }
-        // course.prev_papers.push({
-        //     exam,
-        //     name,
-        //     link
-        // })
-        // await course.save();
 
-        return course;
+        return new Promise(async(resolve, reject) => {
+            try{
+                await addPrev(course.code,paper);
+                resolve(true);
+            }
+            catch(err){
+                reject(err);
+            }
+        })
+    }
+    async function addReference(ref:booksAndRefType):Promise<boolean>{
+        "use server";
+        await dbConnect();
+
+        return new Promise(async(resolve, reject) => {
+            try{
+                await addRef(course.code,ref);
+                resolve(true);
+            }
+            catch(err){
+                reject(err);
+            }
+        })
     }
 
 
@@ -129,6 +136,8 @@ export default async function CoursePage({ params }: { params: { code: string } 
                     <p className="text-center text-gray-500 dark:text-gray-400 text-xl font-semibold">
                         Any Books and References will be shown here.
                     </p>
+                    <AddRefsModal code={course.code} addReference={addReference}  />
+
                 </TabsContent>
                 <TabsContent value="prev_papers">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -151,7 +160,7 @@ export default async function CoursePage({ params }: { params: { code: string } 
                     <p className="text-center text-gray-500 dark:text-gray-400 text-xl font-semibold">
                         Any Previous Year Papers will be shown here.
                     </p>
-                    <AddPrevsModal code={course.code}  />
+                    <AddPrevsModal code={course.code} addPrevPaper={addPrevPaper}  />
                 </TabsContent>
             </Tabs>
 

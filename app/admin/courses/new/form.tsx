@@ -255,14 +255,14 @@ export default function NewCourseForm({ departments, saveCourse }: {
                 <Label htmlFor="content">Previous Papers</Label>
                 {prev_papers.map((prevPaper: prevPaperType, index) => {
                     return <div className="flex flex-col gap-2">
-                        <Label htmlFor={`prevPaper-${index}-name`}>Previous Paper {index + 1}</Label>
-                        <Input id={`prevPaper-${index}-name`} name={`prevPaper-${index}-name`} placeholder="Paper Name" variant="fluid" value={prevPaper.name}
+                        <Label htmlFor={`prevPaper-${index}-link`}>Previous Paper {index + 1}</Label>
+                        <Input id={`prevPaper-${index}-link`} name={`prevPaper-${index}-link`} type="url" placeholder="Paper Link" variant="fluid" value={prevPaper.link}
                             onChange={(e) => {
                                 handlePrevPaperAction(ACTION_TYPES.UPDATE_PREV_PAPER, {
                                     index,
                                     prevPaper: {
                                         ...prevPaper,
-                                        name: e.currentTarget.value
+                                        link: e.currentTarget.value
                                     }
                                 })
                             }} />

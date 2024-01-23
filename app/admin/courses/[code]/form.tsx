@@ -22,7 +22,7 @@ import toast from "react-hot-toast";
 import { ChapterType, CourseTypeWithId, booksAndRefType, prevPaperType } from "src/models/course";
 import { ACTION_TYPES, courseFormReducer } from "./store";
 
-export function EditCourseForm({ departments, saveCourse,course }: {
+export function EditCourseForm({ departments, saveCourse, course }: {
     departments: string[],
     saveCourse: (courseData: CourseTypeWithId) => Promise<CourseTypeWithId>,
     course: CourseTypeWithId
@@ -247,17 +247,7 @@ export function EditCourseForm({ departments, saveCourse,course }: {
                 <Label htmlFor="content">Previous Papers</Label>
                 {prev_papers.map((prevPaper: prevPaperType, index) => {
                     return <div className="flex flex-col gap-2">
-                        <Label htmlFor={`prevPaper-${index}-name`}>Previous Paper {index + 1}</Label>
-                        <Input id={`prevPaper-${index}-name`} name={`prevPaper-${index}-name`} placeholder="Paper Name" variant="fluid" value={prevPaper.name}
-                            onChange={(e) => {
-                                handlePrevPaperAction(ACTION_TYPES.UPDATE_PREV_PAPER, {
-                                    index,
-                                    prevPaper: {
-                                        ...prevPaper,
-                                        name: e.currentTarget.value
-                                    }
-                                })
-                            }} />
+                        <Label htmlFor={`prevPaper-${index}-exam`}>Paper {index + 1}</Label>
                         <div className="flex flex-row gap-2">
                             <Select name={`reference-${index}-type`}
                                 value={prevPaper.exam}
@@ -276,22 +266,39 @@ export function EditCourseForm({ departments, saveCourse,course }: {
                                     <SelectValue placeholder="Select Type" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {["midsem", "endsem", "quiz", "others"].map((type) => <SelectItem value={type} key={type}>{type}</SelectItem>)}
+                                    {["midsem", "endsem", "others"].map((type) => <SelectItem value={type} key={type}>{type}</SelectItem>)}
 
                                 </SelectContent>
 
                             </Select>
-                            <Input id={`prevPaper-${index}-year`} name={`prevPaper-${index}-year`} placeholder="Year" variant="fluid" value={prevPaper.link}
-                                onChange={(e) => {
+                            <Select name={`prevPaper-${index}-year`}
+                                required
+                                value={prevPaper.link}
+                                onValueChange={(value) => {
                                     handlePrevPaperAction(ACTION_TYPES.UPDATE_PREV_PAPER, {
                                         index,
                                         prevPaper: {
                                             ...prevPaper,
-                                            link: e.currentTarget.value
+                                            year: value
                                         }
 
                                     })
-                                }} />
+                                }}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select Year" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {Array.from(
+                                        { length: 6 },
+                                        (_, index) => (new Date().getFullYear() - index).toString()
+                                    ).map((year:string) => (
+                                        <SelectItem key={year} value={year}>
+                                            {year}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+            
                             <Button size="icon" variant="destructive_light" onClick={() => {
                                 handlePrevPaperAction(ACTION_TYPES.REMOVE_PREV_PAPER, { index })
                             }}>
@@ -312,7 +319,7 @@ export function EditCourseForm({ departments, saveCourse,course }: {
             <Button type="submit" size="lg" className="w-full max-w-md mx-auto" onClick={() => {
                 toast.promise(saveCourse(state), {
                     loading: "Updating Course",
-                    success:"Course Updated",
+                    success: "Course Updated",
                     error: "Failed to update course",
                 });
             }}>
