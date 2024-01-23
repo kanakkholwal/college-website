@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 // import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ExternalLink } from 'lucide-react';
 
 import {
     Card,
@@ -11,13 +13,16 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Undo2 } from 'lucide-react';
+import Image from "next/image";
 import Link from "next/link";
 import { getCourseByCode } from "src/lib/course/actions";
 import dbConnect from "src/lib/dbConnect";
 import { booksAndRefType, prevPaperType } from "src/models/course";
-import { addPrev, addRef } from './actions';
 import { AddPrevsModal, AddRefsModal } from "./modal";
 
+import { revalidatePath } from "next/cache";
+import CourseModel from "src/models/course";
+import { IconList } from "./render-link";
 
 export default async function CoursePage({ params }: { params: { code: string } }) {
     await dbConnect();
@@ -26,33 +31,32 @@ export default async function CoursePage({ params }: { params: { code: string } 
         return notFound()
     }
     console.log(course);
-    async function addPrevPaper(paper:prevPaperType):Promise<boolean> {
+
+    async function addPrevPaper(paper: prevPaperType): Promise<boolean> {
         "use server";
         await dbConnect();
-
-        return new Promise(async(resolve, reject) => {
-            try{
-                await addPrev(course.code,paper);
-                resolve(true);
-            }
-            catch(err){
-                reject(err);
-            }
-        })
+        const course = await CourseModel.findOne({ code: params.code });
+        if (!course) return Promise.reject("Course not found");
+        if (course.prev_papers.find((p: prevPaperType) => p.link === paper.link)) {
+            return Promise.reject("Paper already exists");
+        }
+        course.prev_papers.push(paper);
+        await course.save();
+        revalidatePath(`/syllabus/${course.code}`);
+        return Promise.resolve(true);
     }
-    async function addReference(ref:booksAndRefType):Promise<boolean>{
+    async function addReference(ref: booksAndRefType): Promise<boolean> {
         "use server";
         await dbConnect();
-
-        return new Promise(async(resolve, reject) => {
-            try{
-                await addRef(course.code,ref);
-                resolve(true);
-            }
-            catch(err){
-                reject(err);
-            }
-        })
+        const course = await CourseModel.findOne({ code: params.code });
+        if (!course) return Promise.reject("Course not found");
+        if (course.books_and_references.find((p: booksAndRefType) => p.link === ref.link)) {
+            return Promise.reject("Reference already exists");
+        }
+        course.books_and_references.push(ref);
+        await course.save();
+        revalidatePath(`/syllabus/${course.code}`);
+        return Promise.resolve(true);
     }
 
 
@@ -82,15 +86,8 @@ export default async function CoursePage({ params }: { params: { code: string } 
                         </h5>
                         <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
                             <div className="w-full flex flex-wrap items-center gap-4 text-sm mx-auto justify-center">
-                                {/* <span className={"bg-primary/10 text-primary py-1.5 px-3 rounded-md"}>
-                                    {getYear(result.semesters)}
-                                </span>
-                                <span className={"bg-primary/10 text-primary py-1.5 px-3 rounded-md"}>
-                                    {result.branch}
-                                </span>
-                                <span className={"bg-primary/10 text-primary py-1.5 px-3 rounded-md"}>
-                                    {result.programme}
-                                </span> */}
+
+
 
                             </div>
 
@@ -133,34 +130,59 @@ export default async function CoursePage({ params }: { params: { code: string } 
                     </div>
                 </TabsContent>
                 <TabsContent value="books_and_references">
-                    <p className="text-center text-gray-500 dark:text-gray-400 text-xl font-semibold">
+                    {course.books_and_references.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {course.books_and_references.map((ref :booksAndRefType, index:number) => {
+                            const iconsSrc = IconList.find((i) => i.type === ref.type).icon;
+                            return <Card key={index}>
+                                <CardHeader className="md:flex-row md:justify-between gap-2">
+                                    <div className="w-16 h-16 p-3 aspect-square rounded-full flex justify-center items-center  bg-slate-100 dark:bg-gray-800 font-bold text-lg">
+                                        <Image src={iconsSrc} className="w-10 h-10" width={40} height={40} alt={ref.link} />
+                                    </div>
+                                    <div className="flex-auto grow">
+                                        <CardTitle className="break-words">{ref.name}</CardTitle>
+                                            <a href={ref.link} target="_blank" className="text-primary mt-2 text-sm font-semibold" >
+                                                Go to Link
+                                            </a>
+                                    </div>
+
+                                </CardHeader>
+
+                            </Card>
+                        })}
+
+                    </div> : <p className="text-center text-gray-600 dark:text-gray-400 text-md font-semibold pt-5">
                         Any Books and References will be shown here.
-                    </p>
-                    <AddRefsModal code={course.code} addReference={addReference}  />
+                    </p>}
+                    <div className="flex w-full items-center justify-center p-4">
+                        <AddRefsModal code={course.code} addReference={addReference} />
+                    </div>
 
                 </TabsContent>
                 <TabsContent value="prev_papers">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {course.prev_papers.map((paper, index) => {
-                        return <Card key={index}>
-                            <CardHeader>
-                                    <CardTitle className="capitalize">{paper.exam}</CardTitle>
-                                    <CardDescription>
-                                        <Badge className="bg-primary">{paper.year}</Badge>
-                                    </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <a href={paper.link} target="_blank" className="text-sm font-medium line-clamp-1">
-                                    {paper.link}
-                                </a>
-                            </CardContent>
-                        </Card>
-                    })}
-                    </div>
-                    <p className="text-center text-gray-500 dark:text-gray-400 text-xl font-semibold">
+
+                    {course.prev_papers.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {course.prev_papers.map((paper, index) => {
+                            return <div className="flex items-center p-4 gap-3 border border-border hover:border-primary rounded-md" key={index}>
+                                <h6 className="uppercase font-semibold text-lg">
+                                    {paper.exam}
+                                </h6>
+                                <Badge className="bg-primary ml-2">{paper.year}</Badge>
+                                <div className="ml-auto">
+                                    <Button size="icon" asChild>
+                                        <a href={paper.link} target="_blank" >
+                                            <ExternalLink className="w-5 h-5" />
+                                        </a>
+                                    </Button>
+                                </div>
+                            </div>
+                        })}
+                    </div> : <p className="text-center text-gray-600 dark:text-gray-400 text-md font-semibold pt-5">
                         Any Previous Year Papers will be shown here.
-                    </p>
-                    <AddPrevsModal code={course.code} addPrevPaper={addPrevPaper}  />
+                    </p>}
+
+                    <div className="flex w-full items-center justify-center p-4">
+                        <AddPrevsModal code={course.code} addPrevPaper={addPrevPaper} />
+                    </div>
                 </TabsContent>
             </Tabs>
 

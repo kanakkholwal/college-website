@@ -18,7 +18,7 @@ export default async function CoursePageLoader() {
         </div>
         <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6">
           <div className="relative pt-24 ml-auto">
-            <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4">
+            <div className="p-4 flex flex-col  items-center">
               <Skeleton className="w-32 h-8 mb-4" />
               <Skeleton className="w-64 h-16 mb-8" />
               <Skeleton className="w-48 h-6 mb-8" />
