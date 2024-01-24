@@ -97,7 +97,7 @@ export function EditCourseForm({ departments, saveCourse, course }: {
                         <SelectValue placeholder="Select Type" />
                     </SelectTrigger>
                     <SelectContent>
-                        {departments.map((department) => <SelectItem value={department} key={department}>{department}</SelectItem>)}
+                    {[...departments,"Humanities and Social Sciences"].map((department) => <SelectItem value={department} key={department}>{department}</SelectItem>)}
                     </SelectContent>
                 </Select>
             </div>

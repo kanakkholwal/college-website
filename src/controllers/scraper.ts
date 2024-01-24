@@ -209,6 +209,8 @@ export function determineDepartment(RollNo: string) {
             return "Computer Science and Engineering"
         case (lowerRollNo.includes("bch")):
             return "Chemical Engineering"
+        // case (lowerRollNo.includes("bhs")):
+        //     return "Humanities and Social Sciences"
         default:
             throw Error("No Similar branch")
     }
