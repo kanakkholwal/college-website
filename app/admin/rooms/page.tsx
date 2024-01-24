@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
@@ -8,11 +9,11 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 import { Suspense } from "react";
-import { getRooms, updateStatus } from "src/lib/room/actions";
+import { getRooms } from "src/lib/room/actions";
 import Pagination from "./components/pagination";
 import SearchBox from "./components/search";
-import Toggle from "./toggle";
 
 export default async function RoomsPage({
     searchParams,
@@ -53,7 +54,11 @@ export default async function RoomsPage({
 
                                 <SearchBox statuses={currentStatuses} types={roomTypes} />
                             </Suspense>
-                        
+                            <Button size="sm" variant="default_light" asChild>
+                                <Link href="/admin/rooms/new" className="uppercase">
+                                    Add Room
+                                </Link>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -77,7 +82,7 @@ export default async function RoomsPage({
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex w-full flex-col md:flex-row md:justify-around gap-2">
+                        <div className="flex w-full flex-col md:flex-row md:justify-around gap-2">
                                 <div className="flex flex-col items-center gap-1">
                                     <span className="text-sm font-semibold text-slate-600">Capacity</span>
                                     <Badge className="uppercase" variant="default_light">{room.capacity}</Badge>
@@ -95,9 +100,7 @@ export default async function RoomsPage({
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Toggle roomNumber={room.roomNumber} currentStatus={room.currentStatus}
-                                updateStatus={updateStatus}
-                            />
+
                         </CardFooter>
                     </Card>
                 })}

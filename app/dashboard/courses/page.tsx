@@ -104,7 +104,7 @@ export default async function CoursesPage({
             })}
             </Suspense>
 </div>
-        <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6 mt-5">
             <Suspense key="Pagination" fallback={<>
                 <Skeleton className="h-12 w-full " />
             </>}>
