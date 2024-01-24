@@ -89,7 +89,7 @@ export default function CreateRoomForm({onSubmit}:{
             
                 <Select name="currentStatus"
                     value={currentStatus}
-                    onValueChange={(value) => {
+                    onValueChange={(value :"available" |"occupied" ) => {
 
                         dispatch({
                             type: ACTION_TYPES.SET_ROOM_STATUS,
