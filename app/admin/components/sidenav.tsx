@@ -27,9 +27,9 @@ const links: LinkType[] = [
         href: "/admin/courses",
     },
     {
-        label: "Classrooms",
+        label: "Rooms",
         icon: LuBuilding2,
-        href: "/admin/classrooms",
+        href: "/admin/rooms",
     },
     {
         label: "Time Tables",

@@ -59,7 +59,7 @@ export default async function CoursesPage({
                 </div>
             </div>
         </div>
-            <div className="max-w-[100rem] mx-auto px-6 md:px-12 xl:px-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
         <Suspense key="Courses" fallback={<>
             <Skeleton className="h-12 w-full " />
@@ -98,7 +98,7 @@ export default async function CoursesPage({
             })}
             </Suspense>
 </div>
-        <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-6 mt-5">
             <Suspense key="Pagination" fallback={<>
                 <Skeleton className="h-12 w-full " />
             </>}>

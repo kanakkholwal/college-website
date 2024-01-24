@@ -87,7 +87,7 @@ export default function SearchBox({ statuses, types }: Props) {
                         </SheetDescription>
                     </SheetHeader>
                     <div className="mb-4">
-                        <p className="text-sm font-semibold text-slate-600 mb-2">By Departments</p>
+                        <p className="text-sm font-semibold text-slate-600 mb-2">By Status</p>
                         <div className="flex flex-wrap gap-2">
                         <Button
                                 variant="slate"
@@ -99,7 +99,7 @@ export default function SearchBox({ statuses, types }: Props) {
                             >
                                 All
                             </Button>
-                            {statuses.map((status) => (
+                            {["available","occupied"].map((status) => (
                                 <Button
                                     key={status}
                                     variant="slate"
