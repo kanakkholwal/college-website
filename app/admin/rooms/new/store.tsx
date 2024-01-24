@@ -15,7 +15,7 @@ type Action =
 | { type: typeof ACTION_TYPES.SET_ROOM_NUMBER; roomNumber: string }
 | { type: typeof ACTION_TYPES.SET_ROOM_TYPE; roomType: string }
 | { type: typeof ACTION_TYPES.SET_ROOM_CAPACITY; capacity: number }
-| { type: typeof ACTION_TYPES.SET_ROOM_STATUS; currentStatus: string }
+| { type: typeof ACTION_TYPES.SET_ROOM_STATUS; currentStatus: "available" |"occupied" }
 
 export const roomFormReducer = (state: RoomType, action: Action): RoomType => {
     switch (action.type) {
