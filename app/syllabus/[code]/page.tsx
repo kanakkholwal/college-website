@@ -103,7 +103,7 @@ export default async function CoursePage({ params }: { params: { code: string } 
         </div>
         <div className="max-w-6xl mx-auto px-6 md:px-12 xl:px-6">
             <Tabs defaultValue="chapters">
-                <TabsList className="mx-auto w-full bg-transparent font-bold">
+                <TabsList className="mx-auto w-full bg-transparent font-bold flex-wrap gap-4">
                     <TabsTrigger value="chapters">Chapters</TabsTrigger>
                     <TabsTrigger value="books_and_references">Books and References</TabsTrigger>
                     <TabsTrigger value="prev_papers">Previous Year Papers</TabsTrigger>

@@ -8,18 +8,21 @@ import { useTheme } from "next-themes";
 import dynamic from 'next/dynamic';
 import { Semester } from "src/models/result";
 
-const DynamicReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
-
-interface CGPIChartProps {
-    semesters?: Semester[];
-}
-
 export const CGPIChartLoader: React.FC = () => {
     return (
         <div className="w-full relative">
             <Skeleton className="w-full h-full min-h-64" />
         </div>)
 }
+const DynamicReactApexChart = dynamic(() => import('react-apexcharts'), {
+    ssr: false,
+    loading: () => <CGPIChartLoader/>,
+});
+
+interface CGPIChartProps {
+    semesters?: Semester[];
+}
+
 export const CGPIChart: React.FC<CGPIChartProps> = ({ semesters }) => {
 
     const categories = semesters?.map((semester: Semester) => `Semester ${semester.semester}`);
