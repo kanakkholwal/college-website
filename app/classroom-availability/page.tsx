@@ -1,12 +1,5 @@
-import { Badge } from "@/components/ui/badge";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle
-} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { RoomCardPublic } from "app/dashboard/rooms/components/card";
 import Pagination from "app/dashboard/rooms/components/pagination";
 import SearchBox from "app/dashboard/rooms/components/search";
 import { Suspense } from "react";
@@ -66,35 +59,7 @@ export default async function RoomsPage({
                 <Skeleton className="h-12 w-full " />
             </>}>
                 {rooms.map((room) => {
-                    return <Card key={room._id.toString()} className="hover:shadow-lg">
-                        <CardHeader>
-                            <CardTitle>
-                                {room.roomNumber}
-                            </CardTitle>
-                            <CardDescription>
-                                Last updated: {new Date(room.lastUpdatedTime).toLocaleTimeString()}
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex w-full flex-col md:flex-row md:justify-around gap-2">
-                                <div className="flex flex-col items-center gap-1">
-                                    <span className="text-sm font-semibold text-slate-600">Capacity</span>
-                                    <Badge className="uppercase" variant="default_light">{room.capacity}</Badge>
-                                </div>
-                                <div className="flex flex-col items-center gap-1">
-                                    <span className="text-sm font-semibold text-slate-600">Room Type</span>
-                                    <Badge className="uppercase" variant="ghost">{room.roomType}</Badge>
-                                </div>
-                                <div className="flex flex-col items-center gap-1">
-                                    <span className="text-sm font-semibold text-slate-600">Current Status</span>
-                                    <Badge className="uppercase"
-                                    variant={room.currentStatus === "available" ? "success" : "destructive"}
-                                    >{room.currentStatus}</Badge>
-                                </div>
-                            </div>
-                        </CardContent>
-                    
-                    </Card>
+                    return <RoomCardPublic key={room._id.toString()} room={room}/>
                 })}
             </Suspense>
         </div>
