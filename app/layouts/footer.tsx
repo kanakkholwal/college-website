@@ -28,8 +28,8 @@ export default function Footer() {
                     </Link>
                     <p className="mb-12 xl:w-4/5 font-medium text-slate-600">
                         Created by <Link href="https://kanakkholwal.eu.org" className="text-slate-900 dark:text-slate-200 font-semibold">Kanak</Link>
-
                     </p>
+                    <img src="https://visitor-badge.laobi.icu/badge?page_id=nith_portal.visitor-badge" alt="Vistor counter" className="inline-block my-2"/>
                     <div className="flex items-center gap-5">
                         <Link href="https://x.com/kanakkholwal" className={"text-slate-500 hover:text-primary hover:-translate-y-1 ease-in duration-300 flex justify-center items-center h-8 icon"}>
                             <RiTwitterXFill className="w-5 h-5" />
