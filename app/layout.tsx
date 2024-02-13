@@ -61,6 +61,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head>
+                <meta name="google-adsense-account" content="ca-pub-2329686175069611"/>
             </head>
             <body className={font.className + " min-h-screen selection:bg-primary/10 selection:text-primary dark:bg-gray-900"}>
                 <ThemeProvider
