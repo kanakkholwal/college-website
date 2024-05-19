@@ -1,28 +1,26 @@
-import type { Metadata } from 'next';
 import { GoogleAnalytics } from '@next/third-parties/google';
-import { Provider, ThemeProvider } from "./client-provider";
+import type { Metadata } from 'next';
+import { Provider } from "./client-provider";
 
 import './globals.css';
 
-// import { Urbanist } from 'next/font/google';
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Montserrat, Open_Sans } from "next/font/google";
 
-const font = Plus_Jakarta_Sans({
+const font = Open_Sans({
     weight: ['400', '500', '600', '700', '800'],
     subsets: ['latin-ext', 'latin'],
     display: 'swap',
     adjustFontFallback: false,
-    variable: '--plus-jakarta',
     fallback: ['system-ui', 'sans-serif']
 })
 
 
-// const font = Urbanist({
-//     subsets: ['latin'],
-//     preload: true,
-//     display: 'swap',
-//     weight: ["200","300", "400", "500", "600", '700', "800"],
-// })
+const heading_font = Montserrat({
+    subsets: ['latin'],
+    preload: true,
+    display: 'swap',
+    weight: ["500", "600", '700', "800"],
+})
 
 export const metadata: Metadata = {
     title: 'NITH Portal',
@@ -53,6 +51,8 @@ export const metadata: Metadata = {
 
 }
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
     children,
 }: {
@@ -60,19 +60,9 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <head>
-                <meta name="google-adsense-account" content="ca-pub-6988693445063744"/>
-            </head>
+            <head/>
             <body className={font.className + " min-h-screen selection:bg-primary/10 selection:text-primary dark:bg-gray-900"}>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    themes={['light', 'dark']}
-                >
-                    <Provider>{children}</Provider>
-
-                </ThemeProvider>
+                <Provider>{children}</Provider>
                 <GoogleAnalytics gaId="G-SC4TQQ5PCW" />
             </body>
         </html>
